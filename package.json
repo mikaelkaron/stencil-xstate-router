@@ -17,12 +17,12 @@
     "test.watch": "stencil test --spec --e2e --watchAll"
   },
   "devDependencies": {
-    "@stencil/core": "^0.18.1"
+    "@stencil/core": "^0.18.0"
   },
   "license": "MIT",
   "dependencies": {
     "@stencil/router": "^0.3.3",
-    "stencil-xstate": "^0.4.1",
+    "stencil-xstate": "^0.6.0",
     "xstate": "^4.6.0"
   }
 }

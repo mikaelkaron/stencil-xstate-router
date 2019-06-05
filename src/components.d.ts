@@ -7,6 +7,8 @@
 
 import '@stencil/core';
 
+import '@stencil/router';
+import '@stencil/state-tunnel';
 import 'stencil-xstate';
 import {
   Options,
@@ -19,15 +21,6 @@ import {
 
 
 export namespace Components {
-
-  interface IsActive {
-    'current': State<any, any>;
-    'send': Send<any, any, any>;
-  }
-  interface IsActiveAttributes extends StencilHTMLAttributes {
-    'current': State<any, any>;
-    'send': Send<any, any, any>;
-  }
 
   interface IsAnonymous {
     'current': State<any, any>;
@@ -47,7 +40,31 @@ export namespace Components {
     'send': Send<any, any, any>;
   }
 
+  interface IsIdle {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+  }
+  interface IsIdleAttributes extends StencilHTMLAttributes {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+  }
+
+  interface IsTest {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+    'testId': string;
+  }
+  interface IsTestAttributes extends StencilHTMLAttributes {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+    'testId'?: string;
+  }
+
+  interface XstateRouterTest {}
+  interface XstateRouterTestAttributes extends StencilHTMLAttributes {}
+
   interface XstateRouter {
+    'key': string;
     /**
     * An XState machine
     */
@@ -58,10 +75,11 @@ export namespace Components {
     'options'?: Options;
   }
   interface XstateRouterAttributes extends StencilHTMLAttributes {
+    'key'?: string;
     /**
     * An XState machine
     */
-    'machine'?: StateMachine<any, any, any>;
+    'machine': StateMachine<any, any, any>;
     /**
     * Interpreter options that you can pass in
     */
@@ -71,25 +89,23 @@ export namespace Components {
 
 declare global {
   interface StencilElementInterfaces {
-    'IsActive': Components.IsActive;
     'IsAnonymous': Components.IsAnonymous;
     'IsAuthenticated': Components.IsAuthenticated;
+    'IsIdle': Components.IsIdle;
+    'IsTest': Components.IsTest;
+    'XstateRouterTest': Components.XstateRouterTest;
     'XstateRouter': Components.XstateRouter;
   }
 
   interface StencilIntrinsicElements {
-    'is-active': Components.IsActiveAttributes;
     'is-anonymous': Components.IsAnonymousAttributes;
     'is-authenticated': Components.IsAuthenticatedAttributes;
+    'is-idle': Components.IsIdleAttributes;
+    'is-test': Components.IsTestAttributes;
+    'xstate-router-test': Components.XstateRouterTestAttributes;
     'xstate-router': Components.XstateRouterAttributes;
   }
 
-
-  interface HTMLIsActiveElement extends Components.IsActive, HTMLStencilElement {}
-  var HTMLIsActiveElement: {
-    prototype: HTMLIsActiveElement;
-    new (): HTMLIsActiveElement;
-  };
 
   interface HTMLIsAnonymousElement extends Components.IsAnonymous, HTMLStencilElement {}
   var HTMLIsAnonymousElement: {
@@ -103,6 +119,24 @@ declare global {
     new (): HTMLIsAuthenticatedElement;
   };
 
+  interface HTMLIsIdleElement extends Components.IsIdle, HTMLStencilElement {}
+  var HTMLIsIdleElement: {
+    prototype: HTMLIsIdleElement;
+    new (): HTMLIsIdleElement;
+  };
+
+  interface HTMLIsTestElement extends Components.IsTest, HTMLStencilElement {}
+  var HTMLIsTestElement: {
+    prototype: HTMLIsTestElement;
+    new (): HTMLIsTestElement;
+  };
+
+  interface HTMLXstateRouterTestElement extends Components.XstateRouterTest, HTMLStencilElement {}
+  var HTMLXstateRouterTestElement: {
+    prototype: HTMLXstateRouterTestElement;
+    new (): HTMLXstateRouterTestElement;
+  };
+
   interface HTMLXstateRouterElement extends Components.XstateRouter, HTMLStencilElement {}
   var HTMLXstateRouterElement: {
     prototype: HTMLXstateRouterElement;
@@ -110,16 +144,20 @@ declare global {
   };
 
   interface HTMLElementTagNameMap {
-    'is-active': HTMLIsActiveElement
     'is-anonymous': HTMLIsAnonymousElement
     'is-authenticated': HTMLIsAuthenticatedElement
+    'is-idle': HTMLIsIdleElement
+    'is-test': HTMLIsTestElement
+    'xstate-router-test': HTMLXstateRouterTestElement
     'xstate-router': HTMLXstateRouterElement
   }
 
   interface ElementTagNameMap {
-    'is-active': HTMLIsActiveElement;
     'is-anonymous': HTMLIsAnonymousElement;
     'is-authenticated': HTMLIsAuthenticatedElement;
+    'is-idle': HTMLIsIdleElement;
+    'is-test': HTMLIsTestElement;
+    'xstate-router-test': HTMLXstateRouterTestElement;
     'xstate-router': HTMLXstateRouterElement;
   }
 

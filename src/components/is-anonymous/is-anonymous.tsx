@@ -12,6 +12,9 @@ export class IsAnonymous {
   @Prop() current!: State<any, any>;
 
   render() {
-    return <button onClick={() => this.send('LOGIN')}>{JSON.stringify(this.current.value)}</button>;
+    return [
+    <button onClick={() => this.send('LOGIN')}>login</button>,
+    <button onClick={() => this.send('ROUTE', {"path":"/tests","url":"/tests","isExact":true,"params":{}})}>route</button>,
+  ];
   }
 }
