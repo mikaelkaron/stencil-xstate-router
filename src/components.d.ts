@@ -65,6 +65,10 @@ export namespace Components {
 
   interface XstateRouter {
     /**
+    * Should machine be initialized with initial route
+    */
+    'initial': boolean;
+    /**
     * An XState machine
     */
     'machine': StateMachine<any, any, any>;
@@ -82,6 +86,10 @@ export namespace Components {
     'routed': string;
   }
   interface XstateRouterAttributes extends StencilHTMLAttributes {
+    /**
+    * Should machine be initialized with initial route
+    */
+    'initial'?: boolean;
     /**
     * An XState machine
     */

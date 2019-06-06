@@ -30,6 +30,11 @@ export class XStateRouter implements ComponentInterface {
   @Prop() routed: string = 'ROUTED';
 
   /**
+   * Should machine be initialized with initial route
+   */
+  @Prop() initial: boolean = true;
+
+  /**
    * An XState machine
    */
   @Prop() machine!: StateMachine<any, any, any>;
@@ -58,7 +63,7 @@ export class XStateRouter implements ComponentInterface {
 
     this.service.start();
 
-    if (this.match) {
+    if (this.initial && this.match) {
       this.service.send(this.route, this.match);
     }
   }
