@@ -63,7 +63,10 @@ const machine = Machine<Context>({
                 url: '/tests'
               }),
               on: {
-                DETAILS: 'details'
+                DETAILS: {
+                  target: 'details',
+                  cond: ctx => !!(ctx.params && ctx.params.testId)
+                }
               }
             },
             details: {
