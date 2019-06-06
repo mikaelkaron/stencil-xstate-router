@@ -46,16 +46,44 @@ export class XStateRouter implements ComponentInterface {
     immediate: false
   };
 
-  componentWillLoad() {
-    this.service = interpret(this.machine, this.options).onEvent(event => {
-      // only proccess ROUTED events
-      if (event.type === this.ROUTED) {
-        // prevent push if it's the current url
-        if (event.url !== this.history.createHref(this.history.location)) {
-          this.history.push(this.url = event.url);
-        }
+  private eventListener = event => {
+    // only proccess ROUTED events
+    if (event.type === this.ROUTED) {
+      // prevent push if it's the current url
+      if (event.url !== this.history.createHref(this.history.location)) {
+        // store url and push on history
+        this.history.push(this.url = event.url);
       }
-    });
+    }
+  };
+
+  private stateRenderer: Renderer<any, any, any> = (current, send, service) => {
+    const { component: Component, ...params } = mergeMeta(current.meta);
+    if (Component === undefined) {
+      throw new Error(`no component defined in ${current.toStrings(current.value)}.meta`);
+    }
+    return <Component current={current} send={send} service={service} history={this.history} {...params} {...current.context.params} />
+  };
+
+  private routeRenderer = (props: RouteRenderProps) => {
+    // prevent sending during first render 
+    if (!this.loaded) {
+      // store match so we can send after render
+      this.match = props.match;
+      // store history
+      this.history = props.history;
+    }
+    // prevent sending during ROUTED event
+    else if (this.url !== props.match.url) {
+      // don't block next ROUTED event
+      delete this.url;
+      // this is irritating but needed (maybe because we're in the middle of `render`)
+      window.requestAnimationFrame(() => this.service.send(this.ROUTE, this.match = props.match));
+    }
+  };
+
+  componentWillLoad() {
+    this.service = interpret(this.machine, this.options).onEvent(this.eventListener);
   }
 
   componentDidLoad() {
@@ -73,34 +101,9 @@ export class XStateRouter implements ComponentInterface {
   }
 
   render() {
-    const stateRenderer: Renderer<any, any, any> = (current, send, service) => {
-      const { component: Component, ...params } = mergeMeta(current.meta);
-      if (Component === undefined) {
-        throw new Error(`no component defined in ${current.toStrings(current.value)}.meta`);
-      }
-      return <Component current={current} send={send} service={service} history={this.history} {...params} {...current.context.params} />
-    };
-
-    const routeRenderer = (props: RouteRenderProps) => {
-      // prevent sending during first render 
-      if (!this.loaded) {
-        // store match so we can send after render
-        this.match = props.match;
-        // store history
-        this.history = props.history;
-      }
-      // prevent sending during ROUTED event
-      else if (this.url !== props.match.url) {
-        // don't block next ROUTED event
-        delete this.url;
-        // this is irritating but needed (maybe because we're in the middle of `render`)
-        window.requestAnimationFrame(() => this.service.send(this.ROUTE, this.match = props.match));
-      }
-    };
-
-    return <xstate-service service={this.service} renderer={stateRenderer}>
+    return <xstate-service service={this.service} renderer={this.stateRenderer}>
       <stencil-router>
-        {this.machine.on[this.ROUTE].map(({ cond: { path, exact } }: { cond?: RouteCondition<any, any> }) => <stencil-route url={path} exact={exact} routeRender={routeRenderer} />)}
+        {this.machine.on[this.ROUTE].map(({ cond: { path, exact } }: { cond?: RouteCondition<any, any> }) => <stencil-route url={path} exact={exact} routeRender={this.routeRenderer} />)}
       </stencil-router>
     </xstate-service>;
   }
