@@ -64,7 +64,6 @@ export namespace Components {
   interface XstateRouterTestAttributes extends StencilHTMLAttributes {}
 
   interface XstateRouter {
-    'key': string;
     /**
     * An XState machine
     */
@@ -73,9 +72,16 @@ export namespace Components {
     * Interpreter options that you can pass in
     */
     'options'?: Options;
+    /**
+    * Event name for ROUTE
+    */
+    'route': string;
+    /**
+    * Event name for ROUTED
+    */
+    'routed': string;
   }
   interface XstateRouterAttributes extends StencilHTMLAttributes {
-    'key'?: string;
     /**
     * An XState machine
     */
@@ -84,6 +90,14 @@ export namespace Components {
     * Interpreter options that you can pass in
     */
     'options'?: Options;
+    /**
+    * Event name for ROUTE
+    */
+    'route'?: string;
+    /**
+    * Event name for ROUTED
+    */
+    'routed'?: string;
   }
 }
 

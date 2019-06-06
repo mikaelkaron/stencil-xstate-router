@@ -1,30 +1,33 @@
 import { Component, Prop, ComponentInterface } from '@stencil/core';
 import { StateMachine, interpret, Interpreter } from 'xstate';
 import { Options, Renderer } from 'stencil-xstate/dist/types';
+import { RouteRenderProps, RouterHistory, MatchResults } from '@stencil/router';
 import { RouteCondition } from './index';
 import 'stencil-xstate';
 import '@stencil/router';
 
-const mergeMeta = (meta, obj = {}) => Object.keys(meta).reduce((acc, key) => Object.assign(acc, meta[key]), obj);
-
-const stateRenderer: Renderer<any, any, any> = (current, send, service) => {
-  const { component: Component, ...meta } = mergeMeta(current.meta);
-  if (Comment === undefined) {
-    throw new Error(`no component defined in ${JSON.stringify(current.value)}.meta`);
-  }
-  return <Component current={current} send={send} service={service} {...meta} {...current.context.params} />
-};
+const mergeMeta = (meta: any, obj = {}) => Object.keys(meta).reduce((acc, key) => Object.assign(acc, meta[key]), obj);
 
 @Component({
   tag: 'xstate-router',
   shadow: true
 })
 export class XStateRouter implements ComponentInterface {
-  private service: Interpreter<any, any, any>;
   private loaded: boolean = false;
-  private route: any;
+  private service: Interpreter<any, any, any>;
+  private history: RouterHistory;
+  private match: MatchResults;
+  private url: string;
 
-  @Prop() key: string = 'ROUTE';
+  /**
+   * Event name for ROUTE
+   */
+  @Prop() route: string = 'ROUTE';
+
+  /**
+   * Event name for ROUTED
+   */
+  @Prop() routed: string = 'ROUTED';
 
   /**
    * An XState machine
@@ -39,7 +42,15 @@ export class XStateRouter implements ComponentInterface {
   };
 
   componentWillLoad() {
-    this.service = interpret(this.machine, this.options);
+    this.service = interpret(this.machine, this.options).onEvent(event => {
+      // only proccess ROUTED events
+      if (event.type === this.routed) {
+        // prevent push if it's the current url
+        if (event.url !== this.history.createHref(this.history.location)) {
+          this.history.push(this.url = event.url);
+        }
+      }
+    });
   }
 
   componentDidLoad() {
@@ -47,8 +58,8 @@ export class XStateRouter implements ComponentInterface {
 
     this.service.start();
 
-    if (this.route) {
-      this.service.send(this.key, this.route);
+    if (this.match) {
+      this.service.send(this.route, this.match);
     }
   }
 
@@ -57,19 +68,34 @@ export class XStateRouter implements ComponentInterface {
   }
 
   render() {
-    const routeRenderer = props => {
-      if (this.loaded) {
-        // this is irritating but needed (maybe because we're in the middle of `render`)
-        window.setTimeout(() => this.service.send(this.key, props.match));
+    const stateRenderer: Renderer<any, any, any> = (current, send, service) => {
+      const { component: Component, ...params } = mergeMeta(current.meta);
+      if (Component === undefined) {
+        throw new Error(`no component defined in ${current.toStrings(current.value)}.meta`);
       }
-      else {
-        this.route = props.match
+      return <Component current={current} send={send} service={service} history={this.history} {...params} {...current.context.params} />
+    };
+
+    const routeRenderer = (props: RouteRenderProps) => {
+      // prevent sending during first render 
+      if (!this.loaded) {
+        // store match so we can send after render
+        this.match = props.match;
+        // store history
+        this.history = props.history;
+      }
+      // prevent sending during ROUTED event
+      else if (this.url !== props.match.url) {
+        // don't block next ROUTED event
+        delete this.url;
+        // this is irritating but needed (maybe because we're in the middle of `render`)
+        window.requestAnimationFrame(() => this.service.send(this.route, this.match = props.match));
       }
     };
 
     return <xstate-service service={this.service} renderer={stateRenderer}>
       <stencil-router>
-        {this.machine.on[this.key].map(({ cond: { path, exact = true } }: { cond?: RouteCondition<any, any> }) => <stencil-route url={path} exact={exact} routeRender={routeRenderer} />)}
+        {this.machine.on[this.route].map(({ cond: { path, exact } }: { cond?: RouteCondition<any, any> }) => <stencil-route url={path} exact={exact} routeRender={routeRenderer} />)}
       </stencil-router>
     </xstate-service>;
   }

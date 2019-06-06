@@ -1,12 +1,12 @@
 import { Component } from '@stencil/core';
-import { Machine, assign, EventObject } from 'xstate';
-import { RouteCondition } from '../xstate-router'
+import { Machine, assign, send } from 'xstate';
+import { RouteGuard } from '../xstate-router'
 import 'stencil-xstate';
 
-type Context = Partial<{
-  authenticated: boolean;
-  params: { [key: string]: string };
-}>
+type Context = {
+  authenticated?: boolean;
+  params?: { [key: string]: string };
+}
 
 const machine = Machine<Context>({
   id: 'app',
@@ -17,18 +17,16 @@ const machine = Machine<Context>({
   states: {
     idle: {
       on: {
-        '': {
-          target: 'authenticated.current',
-          cond: 'isAuthenticated'
-        },
-        SKIP: 'anonymous'
+        '': [
+          {
+            target: 'authenticated.current',
+            cond: 'isAuthenticated',
+          },
+          {
+            target: 'anonymous'
+          }
+        ]
       },
-      after: {
-        IDLE: 'anonymous'
-      },
-      meta: {
-        component: 'is-idle'
-      }
     },
     anonymous: {
       on: {
@@ -44,17 +42,36 @@ const machine = Machine<Context>({
     authenticated: {
       initial: 'home',
       states: {
-        home: {},
-        account: {},
+        home: {
+          entry: send({
+            type: 'ROUTED',
+            url: '/'
+          }),
+        },
+        account: {
+          entry: send({
+            type: 'ROUTED',
+            url: '/account'
+          }),
+        },
         test: {
           initial: 'overview',
           states: {
             overview: {
+              entry: send({
+                type: 'ROUTED',
+                url: '/tests'
+              }),
               on: {
                 DETAILS: 'details'
               }
             },
-            details: {}
+            details: {
+              entry: send(ctx => ({
+                type: 'ROUTED',
+                url: `/tests/${ctx.params.testId}`
+              })),
+            }
           },
           on: {
             OVERVIEW: '.overview',
@@ -73,7 +90,10 @@ const machine = Machine<Context>({
           actions: [assign({ authenticated: false })],
           target: 'idle'
         },
-        HOME: '.home',
+        HOME: {
+          target: '.home',
+
+        },
         ACCOUNT: '.account',
         TEST: '.test'
       },
@@ -89,6 +109,7 @@ const machine = Machine<Context>({
         cond: {
           type: 'canRoute',
           path: '/',
+          exact: true
         },
       },
       {
@@ -102,7 +123,8 @@ const machine = Machine<Context>({
         target: 'authenticated.test',
         cond: {
           type: 'canRoute',
-          path: '/tests'
+          path: '/tests',
+          exact: true
         }
       },
       {
@@ -113,15 +135,12 @@ const machine = Machine<Context>({
         },
         actions: assign({ params: (_ctx, event) => event.params }),
       }
-    ]
+    ],
   }
 }, {
     guards: {
       isAuthenticated: ctx => ctx.authenticated,
-      canRoute: (_ctx, event, { cond }: { cond: RouteCondition<Context, EventObject> }) => event.path === cond.path
-    },
-    delays: {
-      IDLE: 2000
+      canRoute: RouteGuard
     }
   });
 
