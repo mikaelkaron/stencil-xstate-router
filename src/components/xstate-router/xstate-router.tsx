@@ -22,12 +22,12 @@ export class XStateRouter implements ComponentInterface {
   /**
    * Event name for ROUTE
    */
-  @Prop() route: string = 'ROUTE';
+  @Prop() ROUTE: string = 'ROUTE';
 
   /**
    * Event name for ROUTED
    */
-  @Prop() routed: string = 'ROUTED';
+  @Prop() ROUTED: string = 'ROUTED';
 
   /**
    * Should machine be initialized with initial route
@@ -49,7 +49,7 @@ export class XStateRouter implements ComponentInterface {
   componentWillLoad() {
     this.service = interpret(this.machine, this.options).onEvent(event => {
       // only proccess ROUTED events
-      if (event.type === this.routed) {
+      if (event.type === this.ROUTED) {
         // prevent push if it's the current url
         if (event.url !== this.history.createHref(this.history.location)) {
           this.history.push(this.url = event.url);
@@ -64,7 +64,7 @@ export class XStateRouter implements ComponentInterface {
     this.service.start();
 
     if (this.initial && this.match) {
-      this.service.send(this.route, this.match);
+      this.service.send(this.ROUTE, this.match);
     }
   }
 
@@ -94,13 +94,13 @@ export class XStateRouter implements ComponentInterface {
         // don't block next ROUTED event
         delete this.url;
         // this is irritating but needed (maybe because we're in the middle of `render`)
-        window.requestAnimationFrame(() => this.service.send(this.route, this.match = props.match));
+        window.requestAnimationFrame(() => this.service.send(this.ROUTE, this.match = props.match));
       }
     };
 
     return <xstate-service service={this.service} renderer={stateRenderer}>
       <stencil-router>
-        {this.machine.on[this.route].map(({ cond: { path, exact } }: { cond?: RouteCondition<any, any> }) => <stencil-route url={path} exact={exact} routeRender={routeRenderer} />)}
+        {this.machine.on[this.ROUTE].map(({ cond: { path, exact } }: { cond?: RouteCondition<any, any> }) => <stencil-route url={path} exact={exact} routeRender={routeRenderer} />)}
       </stencil-router>
     </xstate-service>;
   }

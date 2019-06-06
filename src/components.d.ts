@@ -65,6 +65,14 @@ export namespace Components {
 
   interface XstateRouter {
     /**
+    * Event name for ROUTE
+    */
+    'ROUTE': string;
+    /**
+    * Event name for ROUTED
+    */
+    'ROUTED': string;
+    /**
     * Should machine be initialized with initial route
     */
     'initial': boolean;
@@ -76,16 +84,16 @@ export namespace Components {
     * Interpreter options that you can pass in
     */
     'options'?: Options;
+  }
+  interface XstateRouterAttributes extends StencilHTMLAttributes {
     /**
     * Event name for ROUTE
     */
-    'route': string;
+    'ROUTE'?: string;
     /**
     * Event name for ROUTED
     */
-    'routed': string;
-  }
-  interface XstateRouterAttributes extends StencilHTMLAttributes {
+    'ROUTED'?: string;
     /**
     * Should machine be initialized with initial route
     */
@@ -98,14 +106,6 @@ export namespace Components {
     * Interpreter options that you can pass in
     */
     'options'?: Options;
-    /**
-    * Event name for ROUTE
-    */
-    'route'?: string;
-    /**
-    * Event name for ROUTED
-    */
-    'routed'?: string;
   }
 }
 
