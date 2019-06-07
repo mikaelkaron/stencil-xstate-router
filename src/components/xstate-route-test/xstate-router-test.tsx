@@ -1,6 +1,5 @@
 import { Component } from '@stencil/core';
-import { Machine, assign, send } from 'xstate';
-import { RouteGuard } from '../xstate-router'
+import { Machine, assign, send, GuardMeta, EventObject } from 'xstate';
 import 'stencil-xstate';
 
 type Context = {
@@ -10,30 +9,17 @@ type Context = {
 
 const machine = Machine<Context>({
   id: 'app',
-  initial: 'idle',
+  initial: 'anonymous',
   context: {
     authenticated: false
   },
   states: {
-    idle: {
-      on: {
-        '': [
-          {
-            target: 'authenticated.current',
-            cond: 'isAuthenticated',
-          },
-          {
-            target: 'anonymous'
-          }
-        ]
-      },
-    },
     anonymous: {
       on: {
-        LOGIN: {
-          actions: assign({ authenticated: true }),
-          target: 'idle'
-        }
+        '': {
+          target: 'authenticated.current',
+          cond: 'isAuthenticated',
+        },
       },
       meta: {
         component: 'is-anonymous'
@@ -64,7 +50,7 @@ const machine = Machine<Context>({
               }),
             },
             details: {
-              entry: [assign({ params: (_, event) => event.params }), send(ctx => ({
+              entry: [assign({ params: (ctx, event) => event.params || ctx.params }), send(ctx => ({
                 type: 'ROUTED',
                 url: `/tests/${ctx.params.testId}`,
               }))],
@@ -84,16 +70,16 @@ const machine = Machine<Context>({
         },
         current: {
           type: 'history',
+          history: 'deep'
         },
       },
       on: {
-        LOGOUT: {
-          actions: [assign({ authenticated: false })],
-          target: 'idle'
+        '': {
+          target: 'anonymous',
+          cond: 'isNotAuthenticated',
         },
         HOME: {
           target: '.home',
-
         },
         ACCOUNT: '.account',
         TEST: '.test'
@@ -104,6 +90,14 @@ const machine = Machine<Context>({
     }
   },
   on: {
+    LOGIN: {
+      actions: assign({ authenticated: true }),
+      target: 'authenticated.current',
+    },
+    LOGOUT: {
+      actions: [assign({ authenticated: false })],
+      target: 'anonymous'
+    },
     ROUTE: [
       {
         target: 'authenticated.home',
@@ -134,7 +128,7 @@ const machine = Machine<Context>({
           type: 'canRoute',
           path: '/tests/:testId',
         },
-      }
+      },
     ],
     ROUTED: {
       actions: console.log
@@ -142,8 +136,9 @@ const machine = Machine<Context>({
   },
 }, {
     guards: {
+      isNotAuthenticated: ctx => !ctx.authenticated,
       isAuthenticated: ctx => ctx.authenticated,
-      canRoute: RouteGuard
+      canRoute: (_, event, { cond }: GuardMeta<Context, EventObject> & { cond: { path: string } }) => event.path === cond.path
     }
   });
 

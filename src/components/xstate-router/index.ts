@@ -9,5 +9,3 @@ export type RouteGuardMeta<TContext, TEvent extends EventObject> = GuardMeta<TCo
 export interface RouteGuardPredicate<TContext, TEvent extends EventObject> extends GuardPredicate<TContext, TEvent> {
   predicate: RouteConditionPredicate<TContext, OmniEventObject<TEvent>>;
 }
-
-export const RouteGuard = <TContext, TEvent extends EventObject>(_ctx, event, { cond }: RouteGuardMeta<TContext, TEvent>) => event.path === cond.path;

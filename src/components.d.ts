@@ -39,15 +39,6 @@ export namespace Components {
     'send': Send<any, any, any>;
   }
 
-  interface IsIdle {
-    'current': State<any, any>;
-    'send': Send<any, any, any>;
-  }
-  interface IsIdleAttributes extends StencilHTMLAttributes {
-    'current': State<any, any>;
-    'send': Send<any, any, any>;
-  }
-
   interface IsTest {
     'current': State<any, any>;
     'send': Send<any, any, any>;
@@ -112,7 +103,6 @@ declare global {
   interface StencilElementInterfaces {
     'IsAnonymous': Components.IsAnonymous;
     'IsAuthenticated': Components.IsAuthenticated;
-    'IsIdle': Components.IsIdle;
     'IsTest': Components.IsTest;
     'XstateRouterTest': Components.XstateRouterTest;
     'XstateRouter': Components.XstateRouter;
@@ -121,7 +111,6 @@ declare global {
   interface StencilIntrinsicElements {
     'is-anonymous': Components.IsAnonymousAttributes;
     'is-authenticated': Components.IsAuthenticatedAttributes;
-    'is-idle': Components.IsIdleAttributes;
     'is-test': Components.IsTestAttributes;
     'xstate-router-test': Components.XstateRouterTestAttributes;
     'xstate-router': Components.XstateRouterAttributes;
@@ -138,12 +127,6 @@ declare global {
   var HTMLIsAuthenticatedElement: {
     prototype: HTMLIsAuthenticatedElement;
     new (): HTMLIsAuthenticatedElement;
-  };
-
-  interface HTMLIsIdleElement extends Components.IsIdle, HTMLStencilElement {}
-  var HTMLIsIdleElement: {
-    prototype: HTMLIsIdleElement;
-    new (): HTMLIsIdleElement;
   };
 
   interface HTMLIsTestElement extends Components.IsTest, HTMLStencilElement {}
@@ -167,7 +150,6 @@ declare global {
   interface HTMLElementTagNameMap {
     'is-anonymous': HTMLIsAnonymousElement
     'is-authenticated': HTMLIsAuthenticatedElement
-    'is-idle': HTMLIsIdleElement
     'is-test': HTMLIsTestElement
     'xstate-router-test': HTMLXstateRouterTestElement
     'xstate-router': HTMLXstateRouterElement
@@ -176,7 +158,6 @@ declare global {
   interface ElementTagNameMap {
     'is-anonymous': HTMLIsAnonymousElement;
     'is-authenticated': HTMLIsAuthenticatedElement;
-    'is-idle': HTMLIsIdleElement;
     'is-test': HTMLIsTestElement;
     'xstate-router-test': HTMLXstateRouterTestElement;
     'xstate-router': HTMLXstateRouterElement;
