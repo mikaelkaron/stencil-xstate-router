@@ -62,22 +62,21 @@ const machine = Machine<Context>({
                 type: 'ROUTED',
                 url: '/tests'
               }),
-              on: {
-                DETAILS: {
-                  target: 'details',
-                  cond: ctx => !!(ctx.params && ctx.params.testId)
-                }
-              }
             },
             details: {
-              entry: send(ctx => ({
+              entry: [assign({ params: (_, event) => event.params }), send(ctx => ({
                 type: 'ROUTED',
-                url: `/tests/${ctx.params.testId}`
-              })),
+                url: `/tests/${ctx.params.testId}`,
+              }))],
             }
           },
           on: {
             OVERVIEW: '.overview',
+            DETAILS: {
+              target: '.details',
+              internal: false,
+              cond: (_ctx, event) => !!(event.params && event.params.testId)
+            },
           },
           meta: {
             component: 'is-test'
@@ -85,7 +84,6 @@ const machine = Machine<Context>({
         },
         current: {
           type: 'history',
-          history: 'deep'
         },
       },
       on: {
@@ -136,10 +134,12 @@ const machine = Machine<Context>({
           type: 'canRoute',
           path: '/tests/:testId',
         },
-        actions: assign({ params: (_ctx, event) => event.params }),
       }
     ],
-  }
+    ROUTED: {
+      actions: console.log
+    }
+  },
 }, {
     guards: {
       isAuthenticated: ctx => ctx.authenticated,

@@ -1,6 +1,6 @@
 
 import { Component, Prop } from '@stencil/core';
-import { State} from 'xstate';
+import { State } from 'xstate';
 import { Send } from 'stencil-xstate/dist/types';
 
 @Component({
@@ -22,7 +22,7 @@ export class IsTest {
       <button onClick={() => this.send('HOME')}>home</button>,
       <button onClick={() => this.send('ACCOUNT')}>account</button>,
       <button onClick={() => this.send('TEST')}>overview</button>,
-      <button onClick={() => this.send('DETAILS')}>details</button>,
+      <button onClick={() => this.send('DETAILS', { params: { testId: "321" } })}>details</button>,
       <button onClick={() => this.send('LOGOUT')}>logout</button>
     ];
   }
