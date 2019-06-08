@@ -19,7 +19,7 @@ const mergeMeta = (meta: any, obj = {}) =>
 
 @Component({
   tag: 'xstate-router',
-  shadow: true
+  shadow: false
 })
 export class XStateRouter implements ComponentInterface {
   private loaded: boolean = false;

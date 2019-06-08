@@ -155,7 +155,7 @@ const machine = Machine<Context>(
 
 @Component({
   tag: 'xstate-router-test',
-  shadow: true
+  shadow: false
 })
 export class XStateRouterTest {
   render() {

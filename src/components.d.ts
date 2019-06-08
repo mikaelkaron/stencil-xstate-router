@@ -7,9 +7,9 @@
 
 import '@stencil/core';
 
+import 'stencil-xstate';
 import '@stencil/router';
 import '@stencil/state-tunnel';
-import 'stencil-xstate';
 import {
   Options,
   Send,
