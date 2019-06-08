@@ -1,13 +1,21 @@
 import { Component, Prop, ComponentInterface } from '@stencil/core';
-import { StateMachine, interpret, Interpreter, EventObject, State, SingleOrArray, OmniEvent } from 'xstate';
-import { EventListener } from 'xstate/lib/interpreter'
+import {
+  StateMachine,
+  interpret,
+  Interpreter,
+  EventObject,
+  State,
+  SingleOrArray,
+  OmniEvent
+} from 'xstate';
 import { Options, Renderer } from 'stencil-xstate/dist/types';
 import { RouteRenderProps, RouterHistory, MatchResults } from '@stencil/router';
 import { RouteCondition } from './index';
 import 'stencil-xstate';
 import '@stencil/router';
 
-const mergeMeta = (meta: any, obj = {}) => Object.keys(meta).reduce((acc, key) => Object.assign(acc, meta[key]), obj);
+const mergeMeta = (meta: any, obj = {}) =>
+  Object.keys(meta).reduce((acc, key) => Object.assign(acc, meta[key]), obj);
 
 @Component({
   tag: 'xstate-router',
@@ -48,7 +56,15 @@ export class XStateRouter implements ComponentInterface {
   /**
    * Renderer called each time state changes
    */
-  @Prop() renderer: (component: JSX.Element, current: State<any, EventObject>, send: (event: SingleOrArray<OmniEvent<EventObject>>, payload?: Record<string, any> & { type?: undefined; }) => State<any, EventObject>, service: Interpreter<any, any, EventObject>) => JSX.Element[] | JSX.Element;
+  @Prop() renderer: (
+    component: JSX.Element,
+    current: State<any, EventObject>,
+    send: (
+      event: SingleOrArray<OmniEvent<EventObject>>,
+      payload?: Record<string, any> & { type?: undefined }
+    ) => State<any, EventObject>,
+    service: Interpreter<any, any, EventObject>
+  ) => JSX.Element[] | JSX.Element;
 
   componentWillLoad() {
     this.service = interpret(this.machine, this.options);
@@ -72,27 +88,31 @@ export class XStateRouter implements ComponentInterface {
     let history: RouterHistory;
     let url: string;
 
-    const eventListener: EventListener<EventObject> = event => {
-      // only proccess ROUTED events
-      if (event.type === this.ROUTED) {
-        // prevent push if it's the current url
-        if (event.url !== history.createHref(history.location)) {
-          // store url and push on history
-          history.push(url = event.url);
-        }
-      }
-    };
-
-    const componentRenderer: Renderer<any, any, EventObject> = (current, send, service) => {
+    const componentRenderer: Renderer<any, any, EventObject> = (
+      current,
+      send,
+      service
+    ) => {
       const { component: Component, ...params } = mergeMeta(current.meta);
       if (Component === undefined) {
-        throw new Error(`no component defined in ${current.toStrings(current.value)}.meta`);
+        throw new Error(
+          `no component defined in ${current.toStrings(current.value)}.meta`
+        );
       }
-      return <Component current={current} send={send} service={service} history={history} {...params} {...current.context.params} />
+      return (
+        <Component
+          current={current}
+          send={send}
+          service={service}
+          history={history}
+          {...params}
+          {...current.context.params}
+        />
+      );
     };
 
     const routeRenderer = (props: RouteRenderProps) => {
-      // prevent sending during first render 
+      // prevent sending during first render
       if (!this.loaded) {
         // store match so we can send after render
         this.match = props.match;
@@ -104,20 +124,52 @@ export class XStateRouter implements ComponentInterface {
         // don't block next ROUTED event
         url = undefined;
         // this is irritating but needed (maybe because we're in the middle of `render`)
-        window.requestAnimationFrame(() => this.service.send(this.ROUTE, this.match = props.match));
+        window.requestAnimationFrame(() =>
+          this.service.send(this.ROUTE, (this.match = props.match))
+        );
       }
     };
 
-    const serviceRenderer: Renderer<any, any, EventObject> = (current, send, service) => this.renderer
-      ? this.renderer(componentRenderer(current, send, service), current, send, service)
-      : componentRenderer(current, send, service);
+    const serviceRenderer: Renderer<any, any, EventObject> = (
+      current,
+      send,
+      service
+    ) =>
+      this.renderer
+        ? this.renderer(
+            componentRenderer(current, send, service),
+            current,
+            send,
+            service
+          )
+        : componentRenderer(current, send, service);
+
+    const eventListener = (event: EventObject) => {
+      // only proccess ROUTED events
+      if (event.type === this.ROUTED) {
+        // prevent push if it's the current url
+        if (event.url !== history.createHref(history.location)) {
+          // store url and push on history
+          history.push((url = event.url));
+        }
+      }
+    };
 
     this.service.onEvent(eventListener);
 
-    return [
-      <xstate-service service={this.service} renderer={serviceRenderer} />,
-      <stencil-router>{this.machine.on[this.ROUTE].map(({ cond: { path, exact } }: { cond?: RouteCondition<any, any> }) => <stencil-route url={path} exact={exact} routeRender={routeRenderer} />)}</stencil-router>,
-      <slot />
-    ];
+    return (
+      <stencil-router>
+        {this.machine.on[this.ROUTE].map(
+          ({ cond: { path, exact } }: { cond?: RouteCondition<any, any> }) => (
+            <stencil-route
+              url={path}
+              exact={exact}
+              routeRender={routeRenderer}
+            />
+          )
+        )}
+        <xstate-service service={this.service} renderer={serviceRenderer} />
+      </stencil-router>
+    );
   }
 }
