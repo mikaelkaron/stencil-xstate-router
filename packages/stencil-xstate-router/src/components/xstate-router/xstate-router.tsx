@@ -6,7 +6,7 @@ import {
   EventObject,
   State
 } from 'xstate';
-import { Options, Renderer } from 'stencil-xstate/dist/types';
+import { Options, Renderer } from 'stencil-xstate/dist';
 import { RouteRenderProps, RouterHistory, MatchResults } from '@stencil/router';
 import { RouteCondition, Send } from './index';
 import 'stencil-xstate';

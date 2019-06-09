@@ -6,7 +6,7 @@
     "experimentalDecorators": true,
     "lib": [
       "dom",
-      "es2017"
+      "es2015"
     ],
     "moduleResolution": "node",
     "module": "esnext",
@@ -17,8 +17,7 @@
     "jsxFactory": "h"
   },
   "include": [
-    "src",
-    "types/jsx.d.ts"
+    "src"
   ],
   "exclude": [
     "node_modules"

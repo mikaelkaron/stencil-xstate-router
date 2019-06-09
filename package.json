@@ -1,28 +1,6 @@
 {
-  "name": "stencil-xstate-router",
-  "version": "0.0.1",
-  "description": "XState tools for Stencil and routing",
-  "module": "dist/esm/index.js",
-  "main": "dist/index.js",
-  "unpkg": "dist/ionic.js",
-  "types": "dist/types/components.d.ts",
-  "collection": "dist/collection/collection-manifest.json",
-  "files": [
-    "dist/"
-  ],
-  "scripts": {
-    "build": "stencil build --docs",
-    "start": "stencil build --dev --watch --serve",
-    "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll"
-  },
   "devDependencies": {
-    "@stencil/core": "^0.18.0"
+    "lerna": "^3.14.1"
   },
-  "license": "MIT",
-  "dependencies": {
-    "@stencil/router": "^0.3.3",
-    "stencil-xstate": "^0.7.2",
-    "xstate": "^4.6.0"
-  }
+  "name": "stencil-xstate-router"
 }
