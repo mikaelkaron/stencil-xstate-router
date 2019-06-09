@@ -13,7 +13,7 @@ import '@stencil/state-tunnel';
 import 'stencil-xstate';
 import {
   Send,
-} from 'stencil-xstate-router/dist';
+} from 'stencil-xstate-router/dist/types';
 import {
   State,
 } from 'xstate';

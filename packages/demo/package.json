@@ -12,7 +12,7 @@
   "dependencies": {
     "@stencil/core": "0.18.0",
     "stencil-xstate-router": "file:../stencil-xstate-router",
-    "xstate": "^4.6.0"
+    "xstate": "^4.6.1"
   },
   "license": "MIT"
 }

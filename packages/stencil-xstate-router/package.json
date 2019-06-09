@@ -31,6 +31,6 @@
     "stencil-xstate": "^0.7.2"
   },
   "peerDependencies": {
-    "xstate": "^4.6.0"
+    "xstate": "^4.6.1"
   }
 }
