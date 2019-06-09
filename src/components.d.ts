@@ -7,21 +7,24 @@
 
 import '@stencil/core';
 
-import 'stencil-xstate';
 import '@stencil/router';
 import '@stencil/state-tunnel';
+import 'stencil-xstate';
 import {
-  Options,
   Send,
-} from 'stencil-xstate/dist/types';
+} from './components/xstate-router';
 import {
   EventObject,
   Interpreter,
-  OmniEvent,
-  SingleOrArray,
   State,
   StateMachine,
 } from 'xstate';
+import {
+  Options,
+} from 'stencil-xstate/dist/types';
+import {
+  Send as Send2,
+} from './components/xstate-router/index';
 
 
 export namespace Components {
@@ -74,7 +77,7 @@ export namespace Components {
     /**
     * An XState machine
     */
-    'machine': StateMachine<any, any, any>;
+    'machine': StateMachine<any, any, EventObject>;
     /**
     * Interpreter options that you can pass in
     */
@@ -85,10 +88,7 @@ export namespace Components {
     'renderer': (
     component: JSX.Element,
     current: State<any, EventObject>,
-    send: (
-    event: SingleOrArray<OmniEvent<EventObject>>,
-    payload?: Record<string, any> & { type?: undefined }
-    ) => State<any, EventObject>,
+    send: Send<any, any, EventObject>,
     service: Interpreter<any, any, EventObject>
     ) => JSX.Element[] | JSX.Element;
   }
@@ -108,7 +108,7 @@ export namespace Components {
     /**
     * An XState machine
     */
-    'machine': StateMachine<any, any, any>;
+    'machine': StateMachine<any, any, EventObject>;
     /**
     * Interpreter options that you can pass in
     */
@@ -119,10 +119,7 @@ export namespace Components {
     'renderer'?: (
     component: JSX.Element,
     current: State<any, EventObject>,
-    send: (
-    event: SingleOrArray<OmniEvent<EventObject>>,
-    payload?: Record<string, any> & { type?: undefined }
-    ) => State<any, EventObject>,
+    send: Send<any, any, EventObject>,
     service: Interpreter<any, any, EventObject>
     ) => JSX.Element[] | JSX.Element;
   }

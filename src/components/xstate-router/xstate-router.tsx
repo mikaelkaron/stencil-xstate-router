@@ -4,13 +4,11 @@ import {
   interpret,
   Interpreter,
   EventObject,
-  State,
-  SingleOrArray,
-  OmniEvent
+  State
 } from 'xstate';
 import { Options, Renderer } from 'stencil-xstate/dist/types';
 import { RouteRenderProps, RouterHistory, MatchResults } from '@stencil/router';
-import { RouteCondition } from './index';
+import { RouteCondition, Send } from './index';
 import 'stencil-xstate';
 import '@stencil/router';
 
@@ -23,7 +21,7 @@ const mergeMeta = (meta: any, obj = {}) =>
 })
 export class XStateRouter implements ComponentInterface {
   private loaded: boolean = false;
-  private service: Interpreter<any, any, any>;
+  private service: Interpreter<any, any, EventObject>;
   private match: MatchResults;
 
   /**
@@ -44,7 +42,7 @@ export class XStateRouter implements ComponentInterface {
   /**
    * An XState machine
    */
-  @Prop() machine!: StateMachine<any, any, any>;
+  @Prop() machine!: StateMachine<any, any, EventObject>;
 
   /**
    * Interpreter options that you can pass in
@@ -59,10 +57,7 @@ export class XStateRouter implements ComponentInterface {
   @Prop() renderer: (
     component: JSX.Element,
     current: State<any, EventObject>,
-    send: (
-      event: SingleOrArray<OmniEvent<EventObject>>,
-      payload?: Record<string, any> & { type?: undefined }
-    ) => State<any, EventObject>,
+    send: Send<any, any, EventObject>,
     service: Interpreter<any, any, EventObject>
   ) => JSX.Element[] | JSX.Element;
 

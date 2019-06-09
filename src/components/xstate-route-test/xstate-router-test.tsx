@@ -1,6 +1,5 @@
 import { Component } from '@stencil/core';
 import { Machine, assign, send, GuardMeta, EventObject } from 'xstate';
-import 'stencil-xstate';
 
 type Context = {
   authenticated?: boolean;
