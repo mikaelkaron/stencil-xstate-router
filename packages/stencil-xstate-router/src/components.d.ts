@@ -76,7 +76,7 @@ export namespace Components {
     */
     'machine': StateMachine<any, any, EventObject>;
     /**
-    * Interpreter options that you can pass in
+    * Interpreter options
     */
     'options'?: Options;
     /**
@@ -92,7 +92,7 @@ export namespace Components {
     */
     'routed': (url: string) => void;
     /**
-    * Renderer called for states
+    * Renderer for states
     */
     'stateRenderer': (
     component: JSX.Element[] | JSX.Element,
@@ -115,7 +115,7 @@ export namespace Components {
     */
     'machine': StateMachine<any, any, EventObject>;
     /**
-    * Interpreter options that you can pass in
+    * Interpreter options
     */
     'options'?: Options;
     /**
@@ -131,7 +131,7 @@ export namespace Components {
     */
     'routed': (url: string) => void;
     /**
-    * Renderer called for states
+    * Renderer for states
     */
     'stateRenderer'?: (
     component: JSX.Element[] | JSX.Element,
