@@ -27,8 +27,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@stencil/router": "^0.3.3",
-    "stencil-xstate": "^0.7.2"
+    "stencil-xstate": "^0.7.3"
   },
   "peerDependencies": {
     "xstate": "^4.6.1"

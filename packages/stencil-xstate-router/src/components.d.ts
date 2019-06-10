@@ -7,9 +7,10 @@
 
 import '@stencil/core';
 
-import '@stencil/router';
-import '@stencil/state-tunnel';
 import 'stencil-xstate';
+import {
+  Send,
+} from './components/xstate-router';
 import {
   EventObject,
   Interpreter,
@@ -20,25 +21,56 @@ import {
   Options,
 } from 'stencil-xstate/dist/types';
 import {
-  Send,
+  ComponentRenderer,
+  MachineState,
+  RouteEvent,
+  Send as Send2,
 } from './components/xstate-router/index';
 
 
 export namespace Components {
 
+  interface IsAnonymous {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+  }
+  interface IsAnonymousAttributes extends StencilHTMLAttributes {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+  }
+
+  interface IsAuthenticated {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+  }
+  interface IsAuthenticatedAttributes extends StencilHTMLAttributes {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+  }
+
+  interface IsTest {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+    'testId': string;
+  }
+  interface IsTestAttributes extends StencilHTMLAttributes {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+    'testId'?: string;
+  }
+
+  interface XstateRouterTest {}
+  interface XstateRouterTestAttributes extends StencilHTMLAttributes {}
+
   interface XstateRouter {
     /**
-    * Event name for ROUTE
+    * Renderer for components
     */
-    'ROUTE': string;
-    /**
-    * Event name for ROUTED
-    */
-    'ROUTED': string;
-    /**
-    * Should machine be initialized with initial route
-    */
-    'initial': boolean;
+    'componentRenderer': ComponentRenderer<
+    any,
+    any,
+    EventObject
+    >;
     /**
     * An XState machine
     */
@@ -48,28 +80,36 @@ export namespace Components {
     */
     'options'?: Options;
     /**
-    * Renderer called each time state changes
+    * Callback for route subscriptions
     */
-    'renderer': (
-    component: JSX.Element,
-    current: State<any, EventObject>,
-    send: Send<any, any, EventObject>,
+    'route': (
+    path: string,
+    exact: boolean,
+    send: Send<any, any, RouteEvent>
+    ) => VoidFunction;
+    /**
+    * Callback for url changes
+    */
+    'routed': (url: string) => void;
+    /**
+    * Renderer called for states
+    */
+    'stateRenderer': (
+    component: JSX.Element[] | JSX.Element,
+    current: MachineState<any, EventObject>,
+    send: Send<any, any, RouteEvent>,
     service: Interpreter<any, any, EventObject>
     ) => JSX.Element[] | JSX.Element;
   }
   interface XstateRouterAttributes extends StencilHTMLAttributes {
     /**
-    * Event name for ROUTE
+    * Renderer for components
     */
-    'ROUTE'?: string;
-    /**
-    * Event name for ROUTED
-    */
-    'ROUTED'?: string;
-    /**
-    * Should machine be initialized with initial route
-    */
-    'initial'?: boolean;
+    'componentRenderer'?: ComponentRenderer<
+    any,
+    any,
+    EventObject
+    >;
     /**
     * An XState machine
     */
@@ -79,12 +119,24 @@ export namespace Components {
     */
     'options'?: Options;
     /**
-    * Renderer called each time state changes
+    * Callback for route subscriptions
     */
-    'renderer'?: (
-    component: JSX.Element,
-    current: State<any, EventObject>,
-    send: Send<any, any, EventObject>,
+    'route': (
+    path: string,
+    exact: boolean,
+    send: Send<any, any, RouteEvent>
+    ) => VoidFunction;
+    /**
+    * Callback for url changes
+    */
+    'routed': (url: string) => void;
+    /**
+    * Renderer called for states
+    */
+    'stateRenderer'?: (
+    component: JSX.Element[] | JSX.Element,
+    current: MachineState<any, EventObject>,
+    send: Send<any, any, RouteEvent>,
     service: Interpreter<any, any, EventObject>
     ) => JSX.Element[] | JSX.Element;
   }
@@ -92,13 +144,45 @@ export namespace Components {
 
 declare global {
   interface StencilElementInterfaces {
+    'IsAnonymous': Components.IsAnonymous;
+    'IsAuthenticated': Components.IsAuthenticated;
+    'IsTest': Components.IsTest;
+    'XstateRouterTest': Components.XstateRouterTest;
     'XstateRouter': Components.XstateRouter;
   }
 
   interface StencilIntrinsicElements {
+    'is-anonymous': Components.IsAnonymousAttributes;
+    'is-authenticated': Components.IsAuthenticatedAttributes;
+    'is-test': Components.IsTestAttributes;
+    'xstate-router-test': Components.XstateRouterTestAttributes;
     'xstate-router': Components.XstateRouterAttributes;
   }
 
+
+  interface HTMLIsAnonymousElement extends Components.IsAnonymous, HTMLStencilElement {}
+  var HTMLIsAnonymousElement: {
+    prototype: HTMLIsAnonymousElement;
+    new (): HTMLIsAnonymousElement;
+  };
+
+  interface HTMLIsAuthenticatedElement extends Components.IsAuthenticated, HTMLStencilElement {}
+  var HTMLIsAuthenticatedElement: {
+    prototype: HTMLIsAuthenticatedElement;
+    new (): HTMLIsAuthenticatedElement;
+  };
+
+  interface HTMLIsTestElement extends Components.IsTest, HTMLStencilElement {}
+  var HTMLIsTestElement: {
+    prototype: HTMLIsTestElement;
+    new (): HTMLIsTestElement;
+  };
+
+  interface HTMLXstateRouterTestElement extends Components.XstateRouterTest, HTMLStencilElement {}
+  var HTMLXstateRouterTestElement: {
+    prototype: HTMLXstateRouterTestElement;
+    new (): HTMLXstateRouterTestElement;
+  };
 
   interface HTMLXstateRouterElement extends Components.XstateRouter, HTMLStencilElement {}
   var HTMLXstateRouterElement: {
@@ -107,10 +191,18 @@ declare global {
   };
 
   interface HTMLElementTagNameMap {
+    'is-anonymous': HTMLIsAnonymousElement
+    'is-authenticated': HTMLIsAuthenticatedElement
+    'is-test': HTMLIsTestElement
+    'xstate-router-test': HTMLXstateRouterTestElement
     'xstate-router': HTMLXstateRouterElement
   }
 
   interface ElementTagNameMap {
+    'is-anonymous': HTMLIsAnonymousElement;
+    'is-authenticated': HTMLIsAuthenticatedElement;
+    'is-test': HTMLIsTestElement;
+    'xstate-router-test': HTMLXstateRouterTestElement;
     'xstate-router': HTMLXstateRouterElement;
   }
 

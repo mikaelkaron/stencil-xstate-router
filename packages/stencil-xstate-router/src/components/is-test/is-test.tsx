@@ -1,6 +1,6 @@
 import { Component, Prop } from '@stencil/core';
 import { State } from 'xstate';
-import { Send } from 'stencil-xstate-router/dist/types'
+import { Send } from '../xstate-router';
 
 @Component({
   tag: 'is-test',
