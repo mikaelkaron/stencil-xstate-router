@@ -9,29 +9,101 @@ import '@stencil/core';
 
 import 'stencil-xstate-router';
 import 'stencil-xstate';
+import {
+  Send,
+} from 'stencil-xstate-router/dist/types';
+import {
+  State,
+} from 'xstate';
 
 
 export namespace Components {
 
+  interface IsAnonymous {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+  }
+  interface IsAnonymousAttributes extends StencilHTMLAttributes {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+  }
+
+  interface IsAuthenticated {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+  }
+  interface IsAuthenticatedAttributes extends StencilHTMLAttributes {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+  }
+
+  interface IsTest {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+    'testId': string;
+  }
+  interface IsTestAttributes extends StencilHTMLAttributes {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+    'testId'?: string;
+  }
+
+  interface XstateRouterTest {}
+  interface XstateRouterTestAttributes extends StencilHTMLAttributes {}
 }
 
 declare global {
   interface StencilElementInterfaces {
-
+    'IsAnonymous': Components.IsAnonymous;
+    'IsAuthenticated': Components.IsAuthenticated;
+    'IsTest': Components.IsTest;
+    'XstateRouterTest': Components.XstateRouterTest;
   }
 
   interface StencilIntrinsicElements {
-
+    'is-anonymous': Components.IsAnonymousAttributes;
+    'is-authenticated': Components.IsAuthenticatedAttributes;
+    'is-test': Components.IsTestAttributes;
+    'xstate-router-test': Components.XstateRouterTestAttributes;
   }
 
 
+  interface HTMLIsAnonymousElement extends Components.IsAnonymous, HTMLStencilElement {}
+  var HTMLIsAnonymousElement: {
+    prototype: HTMLIsAnonymousElement;
+    new (): HTMLIsAnonymousElement;
+  };
+
+  interface HTMLIsAuthenticatedElement extends Components.IsAuthenticated, HTMLStencilElement {}
+  var HTMLIsAuthenticatedElement: {
+    prototype: HTMLIsAuthenticatedElement;
+    new (): HTMLIsAuthenticatedElement;
+  };
+
+  interface HTMLIsTestElement extends Components.IsTest, HTMLStencilElement {}
+  var HTMLIsTestElement: {
+    prototype: HTMLIsTestElement;
+    new (): HTMLIsTestElement;
+  };
+
+  interface HTMLXstateRouterTestElement extends Components.XstateRouterTest, HTMLStencilElement {}
+  var HTMLXstateRouterTestElement: {
+    prototype: HTMLXstateRouterTestElement;
+    new (): HTMLXstateRouterTestElement;
+  };
 
   interface HTMLElementTagNameMap {
-
+    'is-anonymous': HTMLIsAnonymousElement
+    'is-authenticated': HTMLIsAuthenticatedElement
+    'is-test': HTMLIsTestElement
+    'xstate-router-test': HTMLXstateRouterTestElement
   }
 
   interface ElementTagNameMap {
-
+    'is-anonymous': HTMLIsAnonymousElement;
+    'is-authenticated': HTMLIsAuthenticatedElement;
+    'is-test': HTMLIsTestElement;
+    'xstate-router-test': HTMLXstateRouterTestElement;
   }
 
 

@@ -27,6 +27,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@types/navigo": "^7.0.1",
+    "navigo": "^7.1.2",
     "stencil-xstate": "^0.7.3"
   },
   "peerDependencies": {

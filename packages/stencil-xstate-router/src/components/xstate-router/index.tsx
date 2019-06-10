@@ -4,6 +4,29 @@ import { Send } from 'stencil-xstate/dist/types';
 
 export { Send, MachineState };
 
+export type NavigationHandler = (url: string) => void;
+
+export type RouteHandler<
+  TContext,
+  TSchema extends StateSchema,
+  TEvent extends RouteEvent
+> = (
+  path: string,
+  exact: boolean,
+  send: Send<TContext, TSchema, TEvent>
+) => VoidFunction;
+
+export type StateRenderer<
+  TContext,
+  TSchema extends StateSchema,
+  TEvent extends EventObject
+> = (
+  component: JSX.Element[] | JSX.Element,
+  current: MachineState<TContext, TEvent>,
+  send: Send<TContext, TSchema, TEvent>,
+  service: Interpreter<TContext, TSchema, TEvent>
+) => JSX.Element[] | JSX.Element;
+
 export type ComponentRenderer<
   TContext,
   TSchema extends StateSchema,
@@ -40,7 +63,7 @@ export type ComponentProps<
   /**
    * Method to navigate to URL
    */
-  go: (url: string) => void;
+  navigate: (url: string) => void;
   /**
    * Current state
    */
@@ -73,7 +96,11 @@ export type RouteCondition<TContext, TEvent extends RouteEvent> = RouteEvent &
 export const merge: <T extends RouteMeta>(source: T, target?: T | {}) => T = (
   source,
   target = {}
-) => Object.keys(source).reduce((result, key) => Object.assign(result, source[key]), target);
+) =>
+  Object.keys(source).reduce(
+    (result, key) => Object.assign(result, source[key]),
+    target
+  );
 
 /**
  * Renders a component

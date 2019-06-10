@@ -9,12 +9,7 @@ import '@stencil/core';
 
 import 'stencil-xstate';
 import {
-  Send,
-} from './components/xstate-router';
-import {
   EventObject,
-  Interpreter,
-  State,
   StateMachine,
 } from 'xstate';
 import {
@@ -22,45 +17,21 @@ import {
 } from 'stencil-xstate/dist/types';
 import {
   ComponentRenderer,
-  MachineState,
+  NavigationHandler,
   RouteEvent,
-  Send as Send2,
+  RouteHandler,
+  StateRenderer,
 } from './components/xstate-router/index';
 
 
 export namespace Components {
 
-  interface IsAnonymous {
-    'current': State<any, any>;
-    'send': Send<any, any, any>;
+  interface XstateRouterNavigo {
+    'machine': StateMachine<any, any, EventObject>;
   }
-  interface IsAnonymousAttributes extends StencilHTMLAttributes {
-    'current': State<any, any>;
-    'send': Send<any, any, any>;
+  interface XstateRouterNavigoAttributes extends StencilHTMLAttributes {
+    'machine': StateMachine<any, any, EventObject>;
   }
-
-  interface IsAuthenticated {
-    'current': State<any, any>;
-    'send': Send<any, any, any>;
-  }
-  interface IsAuthenticatedAttributes extends StencilHTMLAttributes {
-    'current': State<any, any>;
-    'send': Send<any, any, any>;
-  }
-
-  interface IsTest {
-    'current': State<any, any>;
-    'send': Send<any, any, any>;
-    'testId': string;
-  }
-  interface IsTestAttributes extends StencilHTMLAttributes {
-    'current': State<any, any>;
-    'send': Send<any, any, any>;
-    'testId'?: string;
-  }
-
-  interface XstateRouterTest {}
-  interface XstateRouterTestAttributes extends StencilHTMLAttributes {}
 
   interface XstateRouter {
     /**
@@ -76,30 +47,21 @@ export namespace Components {
     */
     'machine': StateMachine<any, any, EventObject>;
     /**
+    * Callback for url changes
+    */
+    'navigation': NavigationHandler;
+    /**
     * Interpreter options
     */
     'options'?: Options;
     /**
     * Callback for route subscriptions
     */
-    'route': (
-    path: string,
-    exact: boolean,
-    send: Send<any, any, RouteEvent>
-    ) => VoidFunction;
-    /**
-    * Callback for url changes
-    */
-    'routed': (url: string) => void;
+    'route': RouteHandler<any, any, RouteEvent>;
     /**
     * Renderer for states
     */
-    'stateRenderer': (
-    component: JSX.Element[] | JSX.Element,
-    current: MachineState<any, EventObject>,
-    send: Send<any, any, RouteEvent>,
-    service: Interpreter<any, any, EventObject>
-    ) => JSX.Element[] | JSX.Element;
+    'stateRenderer': StateRenderer<any, any, RouteEvent>;
   }
   interface XstateRouterAttributes extends StencilHTMLAttributes {
     /**
@@ -115,73 +77,40 @@ export namespace Components {
     */
     'machine': StateMachine<any, any, EventObject>;
     /**
+    * Callback for url changes
+    */
+    'navigation': NavigationHandler;
+    /**
     * Interpreter options
     */
     'options'?: Options;
     /**
     * Callback for route subscriptions
     */
-    'route': (
-    path: string,
-    exact: boolean,
-    send: Send<any, any, RouteEvent>
-    ) => VoidFunction;
-    /**
-    * Callback for url changes
-    */
-    'routed': (url: string) => void;
+    'route': RouteHandler<any, any, RouteEvent>;
     /**
     * Renderer for states
     */
-    'stateRenderer'?: (
-    component: JSX.Element[] | JSX.Element,
-    current: MachineState<any, EventObject>,
-    send: Send<any, any, RouteEvent>,
-    service: Interpreter<any, any, EventObject>
-    ) => JSX.Element[] | JSX.Element;
+    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
   }
 }
 
 declare global {
   interface StencilElementInterfaces {
-    'IsAnonymous': Components.IsAnonymous;
-    'IsAuthenticated': Components.IsAuthenticated;
-    'IsTest': Components.IsTest;
-    'XstateRouterTest': Components.XstateRouterTest;
+    'XstateRouterNavigo': Components.XstateRouterNavigo;
     'XstateRouter': Components.XstateRouter;
   }
 
   interface StencilIntrinsicElements {
-    'is-anonymous': Components.IsAnonymousAttributes;
-    'is-authenticated': Components.IsAuthenticatedAttributes;
-    'is-test': Components.IsTestAttributes;
-    'xstate-router-test': Components.XstateRouterTestAttributes;
+    'xstate-router-navigo': Components.XstateRouterNavigoAttributes;
     'xstate-router': Components.XstateRouterAttributes;
   }
 
 
-  interface HTMLIsAnonymousElement extends Components.IsAnonymous, HTMLStencilElement {}
-  var HTMLIsAnonymousElement: {
-    prototype: HTMLIsAnonymousElement;
-    new (): HTMLIsAnonymousElement;
-  };
-
-  interface HTMLIsAuthenticatedElement extends Components.IsAuthenticated, HTMLStencilElement {}
-  var HTMLIsAuthenticatedElement: {
-    prototype: HTMLIsAuthenticatedElement;
-    new (): HTMLIsAuthenticatedElement;
-  };
-
-  interface HTMLIsTestElement extends Components.IsTest, HTMLStencilElement {}
-  var HTMLIsTestElement: {
-    prototype: HTMLIsTestElement;
-    new (): HTMLIsTestElement;
-  };
-
-  interface HTMLXstateRouterTestElement extends Components.XstateRouterTest, HTMLStencilElement {}
-  var HTMLXstateRouterTestElement: {
-    prototype: HTMLXstateRouterTestElement;
-    new (): HTMLXstateRouterTestElement;
+  interface HTMLXstateRouterNavigoElement extends Components.XstateRouterNavigo, HTMLStencilElement {}
+  var HTMLXstateRouterNavigoElement: {
+    prototype: HTMLXstateRouterNavigoElement;
+    new (): HTMLXstateRouterNavigoElement;
   };
 
   interface HTMLXstateRouterElement extends Components.XstateRouter, HTMLStencilElement {}
@@ -191,18 +120,12 @@ declare global {
   };
 
   interface HTMLElementTagNameMap {
-    'is-anonymous': HTMLIsAnonymousElement
-    'is-authenticated': HTMLIsAuthenticatedElement
-    'is-test': HTMLIsTestElement
-    'xstate-router-test': HTMLXstateRouterTestElement
+    'xstate-router-navigo': HTMLXstateRouterNavigoElement
     'xstate-router': HTMLXstateRouterElement
   }
 
   interface ElementTagNameMap {
-    'is-anonymous': HTMLIsAnonymousElement;
-    'is-authenticated': HTMLIsAuthenticatedElement;
-    'is-test': HTMLIsTestElement;
-    'xstate-router-test': HTMLXstateRouterTestElement;
+    'xstate-router-navigo': HTMLXstateRouterNavigoElement;
     'xstate-router': HTMLXstateRouterElement;
   }
 

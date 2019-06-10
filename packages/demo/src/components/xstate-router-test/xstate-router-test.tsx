@@ -1,10 +1,12 @@
 import { Component, State } from '@stencil/core';
 import { Machine, assign, send, GuardMeta, EventObject } from 'xstate';
+import 'stencil-xstate-router';
 
 type Context = {
   authenticated?: boolean;
   params?: { [key: string]: string };
 };
+
 @Component({
   tag: 'xstate-router-test',
   shadow: false
@@ -137,7 +139,7 @@ export class XStateRouterTest {
               path: '/tests/:testId'
             }
           }
-        ]
+        ].sort((a, b) => b.cond.path.length - a.cond.path.length)
       }
     },
     {
@@ -154,15 +156,6 @@ export class XStateRouterTest {
   );
 
   render() {
-    return (
-      <xstate-router
-        machine={this.machine}
-        route={(path, exact) => {
-          console.log(`subscribe ${path}:${exact}`);
-          return () => console.log(`unsubscribe ${path}`);
-        }}
-        routed={url => console.log(`go ${url}`)}
-      />
-    );
+    return <xstate-router-navigo machine={this.machine} />;
   }
 }

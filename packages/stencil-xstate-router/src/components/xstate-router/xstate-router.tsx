@@ -7,10 +7,11 @@ import {
   RouteCondition,
   RouteMeta,
   RouteEvent,
-  Send,
-  MachineState,
   merge,
-  renderComponent
+  renderComponent,
+  RouteHandler,
+  StateRenderer,
+  NavigationHandler
 } from './index';
 import 'stencil-xstate';
 
@@ -37,12 +38,7 @@ export class XStateRouter implements ComponentInterface {
   /**
    * Renderer for states
    */
-  @Prop() stateRenderer: (
-    component: JSX.Element[] | JSX.Element,
-    current: MachineState<any, EventObject>,
-    send: Send<any, any, RouteEvent>,
-    service: Interpreter<any, any, EventObject>
-  ) => JSX.Element[] | JSX.Element;
+  @Prop() stateRenderer: StateRenderer<any, any, RouteEvent>;
 
   /**
    * Renderer for components
@@ -56,16 +52,12 @@ export class XStateRouter implements ComponentInterface {
   /**
    * Callback for route subscriptions
    */
-  @Prop() route!: (
-    path: string,
-    exact: boolean,
-    send: Send<any, any, RouteEvent>
-  ) => VoidFunction;
+  @Prop() route!: RouteHandler<any, any, RouteEvent>;
 
   /**
    * Callback for url changes
    */
-  @Prop() routed!: (url: string) => void;
+  @Prop() navigation!: NavigationHandler;
 
   componentWillLoad() {
     this.service = interpret(this.machine, this.options);
@@ -77,7 +69,7 @@ export class XStateRouter implements ComponentInterface {
 
     this.service.onEvent((event: RouteEvent) => {
       if (event.type === 'ROUTED') {
-        this.routed(event.url);
+        this.navigation(event.url);
       }
     });
   }
@@ -107,7 +99,7 @@ export class XStateRouter implements ComponentInterface {
       const props: ComponentProps<any, any, EventObject> = {
         ...params,
         ...current.context.params,
-        go: this.routed,
+        navigate: this.navigation,
         current,
         send,
         service
