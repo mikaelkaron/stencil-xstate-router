@@ -1,19 +1,20 @@
-import { Component, Prop, State, ComponentInterface } from '@stencil/core';
-import { StateMachine, interpret, Interpreter, EventObject } from 'xstate';
+import { Component, ComponentInterface, Prop, State } from '@stencil/core';
+import 'stencil-xstate';
 import { Options, Renderer } from 'stencil-xstate/dist/types';
+import { EventObject, interpret, Interpreter, StateMachine } from 'xstate';
 import {
+  merge,
   ComponentProps,
   ComponentRenderer,
-  RouteCondition,
-  RouteMeta,
-  RouteEvent,
-  merge,
+  NavigationHandler,
   renderComponent,
+  RouteCondition,
+  RouteEvent,
   RouteHandler,
+  RouteMeta,
   StateRenderer,
-  NavigationHandler
+  routeGuard
 } from './index';
-import 'stencil-xstate';
 
 @Component({
   tag: 'xstate-router',
@@ -60,9 +61,15 @@ export class XStateRouter implements ComponentInterface {
   @Prop() navigate!: NavigationHandler;
 
   componentWillLoad() {
-    this.service = interpret(this.machine, this.options);
+    const machine = this.machine.withConfig({
+      guards: {
+        route: routeGuard
+      }
+    });
 
-    const routes = this.machine.on['ROUTE'];
+    this.service = interpret(machine, this.options);
+
+    const routes = machine.on['ROUTE'];
     if (!routes) {
       throw new Error('no ROUTE events found on root node');
     }

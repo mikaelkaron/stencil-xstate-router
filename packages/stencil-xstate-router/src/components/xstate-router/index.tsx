@@ -1,6 +1,12 @@
-import { EventObject, Condition, StateSchema, Interpreter } from 'xstate';
-import { State as MachineState } from 'xstate';
 import { Send } from 'stencil-xstate/dist/types';
+import {
+  Condition,
+  EventObject,
+  GuardMeta,
+  Interpreter,
+  State as MachineState,
+  StateSchema
+} from 'xstate';
 
 export { Send, MachineState };
 
@@ -11,7 +17,7 @@ export type RouteHandler<
   TSchema extends StateSchema,
   TEvent extends RouteEvent
 > = (
-  routes: [{path: string, [key:string]: any}],
+  routes: [{ path: string; [key: string]: any }],
   send: Send<TContext, TSchema, TEvent>
 ) => VoidFunction[];
 
@@ -76,8 +82,19 @@ export type RouteMeta = Record<string, any> & {
   component: string;
 };
 
+export type RouteGuardMeta<TContext, TEvent extends RouteEvent> = GuardMeta<
+  TContext,
+  TEvent
+> & { cond: RouteEvent };
+
 export type RouteCondition<TContext, TEvent extends RouteEvent> = RouteEvent &
   Condition<TContext, TEvent>;
+
+export type RouteConditionPredicate<TContext, TEvent extends RouteEvent> = (
+  context: TContext,
+  event: TEvent,
+  meta: RouteGuardMeta<TContext, TEvent>
+) => boolean;
 
 /**
  * Merges meta objects
@@ -102,3 +119,15 @@ export const renderComponent: ComponentRenderer<any, any, EventObject> = (
   Component,
   props
 ) => <Component {...props} />;
+
+/**
+ * Guards a route
+ * @param _ Context
+ * @param event Event
+ * @param param2 Meta
+ */
+export const routeGuard: RouteConditionPredicate<any, RouteEvent> = (
+  _,
+  event,
+  { cond }
+) => event.path === cond.path;

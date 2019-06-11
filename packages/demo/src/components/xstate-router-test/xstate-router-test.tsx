@@ -1,5 +1,5 @@
 import { Component, State } from '@stencil/core';
-import { Machine, assign, send, GuardMeta, EventObject } from 'xstate';
+import { Machine, assign, send } from 'xstate';
 import 'stencil-xstate-router';
 
 type Context = {
@@ -112,28 +112,28 @@ export class XStateRouterTest {
           {
             target: 'authenticated.home',
             cond: {
-              type: 'canRoute',
+              type: 'route',
               path: '/'
             }
           },
           {
             target: 'authenticated.account',
             cond: {
-              type: 'canRoute',
+              type: 'route',
               path: '/account'
             }
           },
           {
             target: 'authenticated.test',
             cond: {
-              type: 'canRoute',
+              type: 'route',
               path: '/tests'
             }
           },
           {
             target: 'authenticated.test.details',
             cond: {
-              type: 'canRoute',
+              type: 'route',
               path: '/tests/:testId'
             }
           }
@@ -143,12 +143,7 @@ export class XStateRouterTest {
     {
       guards: {
         isNotAuthenticated: ctx => !ctx.authenticated,
-        isAuthenticated: ctx => ctx.authenticated,
-        canRoute: (
-          _,
-          event,
-          { cond }: GuardMeta<Context, EventObject> & { cond: { path: string } }
-        ) => event.path === cond.path
+        isAuthenticated: ctx => ctx.authenticated
       }
     }
   );
