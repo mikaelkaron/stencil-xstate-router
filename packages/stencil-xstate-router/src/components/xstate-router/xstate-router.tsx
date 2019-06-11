@@ -57,19 +57,26 @@ export class XStateRouter implements ComponentInterface {
   /**
    * Callback for url changes
    */
-  @Prop() navigation!: NavigationHandler;
+  @Prop() navigate!: NavigationHandler;
 
   componentWillLoad() {
     this.service = interpret(this.machine, this.options);
 
-    this.machine.on['ROUTE'].forEach(
-      ({ cond: { path, exact } }: { cond?: RouteCondition<any, RouteEvent> }) =>
-        this.subscriptions.add(this.route(path, exact, this.service.send))
+    const routes = this.machine.on['ROUTE'];
+    if (!routes) {
+      throw new Error('no ROUTE events found on root node');
+    }
+
+    routes.forEach(
+      ({ cond: { path } }: { cond?: RouteCondition<any, RouteEvent> }) =>
+        this.route([{ path }], this.service.send).forEach(unsubscribe =>
+          this.subscriptions.add(unsubscribe)
+        )
     );
 
     this.service.onEvent((event: RouteEvent) => {
       if (event.type === 'ROUTED') {
-        this.navigation(event.url);
+        this.navigate(event.url);
       }
     });
   }
@@ -99,7 +106,6 @@ export class XStateRouter implements ComponentInterface {
       const props: ComponentProps<any, any, EventObject> = {
         ...params,
         ...current.context.params,
-        navigate: this.navigation,
         current,
         send,
         service

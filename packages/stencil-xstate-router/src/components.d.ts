@@ -27,9 +27,15 @@ import {
 export namespace Components {
 
   interface XstateRouterNavigo {
+    /**
+    * An XState machine
+    */
     'machine': StateMachine<any, any, EventObject>;
   }
   interface XstateRouterNavigoAttributes extends StencilHTMLAttributes {
+    /**
+    * An XState machine
+    */
     'machine': StateMachine<any, any, EventObject>;
   }
 
@@ -49,7 +55,7 @@ export namespace Components {
     /**
     * Callback for url changes
     */
-    'navigation': NavigationHandler;
+    'navigate': NavigationHandler;
     /**
     * Interpreter options
     */
@@ -79,7 +85,7 @@ export namespace Components {
     /**
     * Callback for url changes
     */
-    'navigation': NavigationHandler;
+    'navigate': NavigationHandler;
     /**
     * Interpreter options
     */

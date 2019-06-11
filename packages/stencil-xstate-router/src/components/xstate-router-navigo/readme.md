@@ -7,9 +7,9 @@
 
 ## Properties
 
-| Property               | Attribute | Description | Type                                  | Default     |
-| ---------------------- | --------- | ----------- | ------------------------------------- | ----------- |
-| `machine` _(required)_ | --        |             | `StateMachine<any, any, EventObject>` | `undefined` |
+| Property               | Attribute | Description       | Type                                  | Default     |
+| ---------------------- | --------- | ----------------- | ------------------------------------- | ----------- |
+| `machine` _(required)_ | --        | An XState machine | `StateMachine<any, any, EventObject>` | `undefined` |
 
 
 ----------------------------------------------

@@ -11,10 +11,9 @@ export type RouteHandler<
   TSchema extends StateSchema,
   TEvent extends RouteEvent
 > = (
-  path: string,
-  exact: boolean,
+  routes: [{path: string, [key:string]: any}],
   send: Send<TContext, TSchema, TEvent>
-) => VoidFunction;
+) => VoidFunction[];
 
 export type StateRenderer<
   TContext,
@@ -32,7 +31,7 @@ export type ComponentRenderer<
   TSchema extends StateSchema,
   TEvent extends EventObject
 > = (
-  Component: string,
+  component: string,
   props?: ComponentProps<TContext, TSchema, TEvent>
 ) => JSX.Element[] | JSX.Element;
 
@@ -46,10 +45,6 @@ export type RouteEvent = EventObject & {
    */
   path?: string;
   /**
-   * Is this an exact match
-   */
-  exact?: boolean;
-  /**
    * Route parameters
    */
   params?: Record<string, string>;
@@ -60,10 +55,6 @@ export type ComponentProps<
   TSchema extends StateSchema,
   TEvent extends EventObject
 > = RouteMeta & {
-  /**
-   * Method to navigate to URL
-   */
-  navigate: (url: string) => void;
   /**
    * Current state
    */
@@ -82,7 +73,7 @@ export type RouteMeta = Record<string, any> & {
   /**
    * Component tag
    */
-  component?: string;
+  component: string;
 };
 
 export type RouteCondition<TContext, TEvent extends RouteEvent> = RouteEvent &

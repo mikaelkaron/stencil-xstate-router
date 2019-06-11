@@ -113,8 +113,7 @@ export class XStateRouterTest {
             target: 'authenticated.home',
             cond: {
               type: 'canRoute',
-              path: '/',
-              exact: true
+              path: '/'
             }
           },
           {
@@ -128,8 +127,7 @@ export class XStateRouterTest {
             target: 'authenticated.test',
             cond: {
               type: 'canRoute',
-              path: '/tests',
-              exact: true
+              path: '/tests'
             }
           },
           {
@@ -139,7 +137,7 @@ export class XStateRouterTest {
               path: '/tests/:testId'
             }
           }
-        ].sort((a, b) => b.cond.path.length - a.cond.path.length)
+        ]
       }
     },
     {

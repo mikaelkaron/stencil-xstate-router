@@ -9,6 +9,9 @@ import Navigo from 'navigo';
 export class XStateRouterNavigo implements ComponentInterface {
   @State() router = new Navigo();
 
+  /**
+   * An XState machine
+   */
   @Prop() machine!: StateMachine<any, any, EventObject>;
 
   componentDidLoad() {
@@ -23,20 +26,27 @@ export class XStateRouterNavigo implements ComponentInterface {
     return (
       <xstate-router
         machine={this.machine}
-        route={(path, _exact, send) => {
-          const handler = (params: Record<string, any>) =>
-            send({
-              type: 'ROUTE',
-              path,
-              params
-            });
+        route={(routes, send) =>
+          routes
+            ? routes
+                // https://github.com/krasimir/navigo/pull/39
+                .sort((a, b) => b.path.length - a.path.length)
+                .map(({ path }) => {
+                  const handler = (params: Record<string, any>) =>
+                    send({
+                      type: 'ROUTE',
+                      path,
+                      params
+                    });
 
-          this.router.on(path, handler);
+                  this.router.on(path, handler);
 
-          return () => this.router.off(path, handler);
-        }}
-        navigation={url =>
-          url !== location.pathname && this.router.navigate(url)
+                  return () => this.router.off(path, handler);
+                })
+            : []
+        }
+        navigate={url =>
+          url !== window.location.pathname && this.router.navigate(url)
         }
       />
     );
