@@ -26,8 +26,8 @@ export class IsAuthenticated implements ComponentInterface {
       <button onClick={() => this.send('ACCOUNT')}>account</button>,
       <button onClick={() => this.send('TEST')}>test</button>,
       <button onClick={() => this.send('LOGOUT')}>logout</button>,
-      <stencil-route-link url='/tests'>/tests</stencil-route-link>,
-      <stencil-route-link url='/tests/123'>/tests/123</stencil-route-link>
+      <a href='/tests'>/tests</a>,
+      <a href='/tests/123'>/tests/123</a>
     ];
   }
 }
