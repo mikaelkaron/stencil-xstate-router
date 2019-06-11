@@ -1,4 +1,10 @@
-import { Component, State, Prop, ComponentInterface } from '@stencil/core';
+import {
+  Component,
+  State,
+  Prop,
+  ComponentInterface,
+  Listen
+} from '@stencil/core';
 import { StateMachine, EventObject } from 'xstate';
 import Navigo from 'navigo';
 
@@ -20,6 +26,18 @@ export class XStateRouterNavigo implements ComponentInterface {
 
   componentDidUnload() {
     this.router.destroy();
+  }
+
+  @Listen('click')
+  handleClick(event: UIEvent & { path: [HTMLElement] }) {
+    const {
+      path: [el]
+    } = event;
+
+    if (el.hasAttribute('href')) {
+      event.preventDefault();
+      this.router.navigate(el.getAttribute('href'));
+    }
   }
 
   render() {
