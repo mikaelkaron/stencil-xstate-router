@@ -18,7 +18,7 @@ import {
 import {
   ComponentRenderer,
   NavigationHandler,
-  RouteEvent,
+  RouteEventObject,
   RouteHandler,
   StateRenderer,
 } from './components/xstate-router/index';
@@ -41,7 +41,7 @@ export namespace Components {
 
   interface XstateRouter {
     /**
-    * Renderer for components
+    * Component renderer
     */
     'componentRenderer': ComponentRenderer<
     any,
@@ -53,6 +53,10 @@ export namespace Components {
     */
     'machine': StateMachine<any, any, EventObject>;
     /**
+    * Should state.meta be merged
+    */
+    'merge': boolean;
+    /**
     * Callback for url changes
     */
     'navigate': NavigationHandler;
@@ -63,15 +67,15 @@ export namespace Components {
     /**
     * Callback for route subscriptions
     */
-    'route': RouteHandler<any, any, RouteEvent>;
+    'route': RouteHandler<any, any, RouteEventObject>;
     /**
-    * Renderer for states
+    * State renderer
     */
-    'stateRenderer': StateRenderer<any, any, RouteEvent>;
+    'stateRenderer': StateRenderer<any, any, RouteEventObject>;
   }
   interface XstateRouterAttributes extends StencilHTMLAttributes {
     /**
-    * Renderer for components
+    * Component renderer
     */
     'componentRenderer'?: ComponentRenderer<
     any,
@@ -83,6 +87,10 @@ export namespace Components {
     */
     'machine': StateMachine<any, any, EventObject>;
     /**
+    * Should state.meta be merged
+    */
+    'merge'?: boolean;
+    /**
     * Callback for url changes
     */
     'navigate': NavigationHandler;
@@ -93,11 +101,11 @@ export namespace Components {
     /**
     * Callback for route subscriptions
     */
-    'route': RouteHandler<any, any, RouteEvent>;
+    'route': RouteHandler<any, any, RouteEventObject>;
     /**
-    * Renderer for states
+    * State renderer
     */
-    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
+    'stateRenderer'?: StateRenderer<any, any, RouteEventObject>;
   }
 }
 

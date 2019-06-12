@@ -15,7 +15,7 @@ export type NavigationHandler = (url: string) => void;
 export type RouteHandler<
   TContext,
   TSchema extends StateSchema,
-  TEvent extends RouteEvent
+  TEvent extends RouteEventObject
 > = (
   routes: [{ path: string; [key: string]: any }],
   send: Send<TContext, TSchema, TEvent>
@@ -41,11 +41,7 @@ export type ComponentRenderer<
   props?: ComponentProps<TContext, TSchema, TEvent>
 ) => JSX.Element[] | JSX.Element;
 
-export type RouteEvent = EventObject & {
-  /**
-   * URL routed to
-   */
-  url?: string;
+export type RouteEventObject = EventObject & {
   /**
    * Path routed to
    */
@@ -54,6 +50,13 @@ export type RouteEvent = EventObject & {
    * Route parameters
    */
   params?: Record<string, string>;
+};
+
+export type NavigationEventObject = EventObject & {
+  /**
+   * URL routed to
+   */
+  url?: string;
 };
 
 export type ComponentProps<
@@ -82,15 +85,20 @@ export type RouteMeta = Record<string, any> & {
   component: string;
 };
 
-export type RouteGuardMeta<TContext, TEvent extends RouteEvent> = GuardMeta<
+export type RouteGuardMeta<
   TContext,
-  TEvent
-> & { cond: RouteEvent };
+  TEvent extends RouteEventObject
+> = GuardMeta<TContext, TEvent> & { cond: RouteEventObject };
 
-export type RouteCondition<TContext, TEvent extends RouteEvent> = RouteEvent &
-  Condition<TContext, TEvent>;
+export type RouteCondition<
+  TContext,
+  TEvent extends RouteEventObject
+> = RouteEventObject & Condition<TContext, TEvent>;
 
-export type RouteConditionPredicate<TContext, TEvent extends RouteEvent> = (
+export type RouteConditionPredicate<
+  TContext,
+  TEvent extends RouteEventObject
+> = (
   context: TContext,
   event: TEvent,
   meta: RouteGuardMeta<TContext, TEvent>
@@ -126,7 +134,7 @@ export const renderComponent: ComponentRenderer<any, any, EventObject> = (
  * @param event Event
  * @param param2 Meta
  */
-export const routeGuard: RouteConditionPredicate<any, RouteEvent> = (
+export const routeGuard: RouteConditionPredicate<any, RouteEventObject> = (
   _,
   event,
   { cond }

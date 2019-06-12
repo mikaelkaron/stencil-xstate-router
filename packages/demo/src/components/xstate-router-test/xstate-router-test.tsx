@@ -24,7 +24,7 @@ export class XStateRouterTest {
           on: {
             '': {
               target: 'authenticated.current',
-              cond: 'isAuthenticated'
+              cond: 'isAuth'
             }
           },
           meta: {
@@ -36,13 +36,13 @@ export class XStateRouterTest {
           states: {
             home: {
               entry: send({
-                type: 'ROUTED',
+                type: 'NAVIGATE',
                 url: '/'
               })
             },
             account: {
               entry: send({
-                type: 'ROUTED',
+                type: 'NAVIGATE',
                 url: '/account'
               })
             },
@@ -51,7 +51,7 @@ export class XStateRouterTest {
               states: {
                 overview: {
                   entry: send({
-                    type: 'ROUTED',
+                    type: 'NAVIGATE',
                     url: '/tests'
                   })
                 },
@@ -61,7 +61,7 @@ export class XStateRouterTest {
                       params: (ctx, event) => event.params || ctx.params
                     }),
                     send(ctx => ({
-                      type: 'ROUTED',
+                      type: 'NAVIGATE',
                       url: `/tests/${ctx.params.testId}`
                     }))
                   ]
@@ -86,7 +86,7 @@ export class XStateRouterTest {
           on: {
             '': {
               target: 'anonymous',
-              cond: 'isNotAuthenticated'
+              cond: 'noAuth'
             },
             HOME: {
               target: '.home'
@@ -142,8 +142,8 @@ export class XStateRouterTest {
     },
     {
       guards: {
-        isNotAuthenticated: ctx => !ctx.authenticated,
-        isAuthenticated: ctx => ctx.authenticated
+        noAuth: ctx => !ctx.authenticated,
+        isAuth: ctx => ctx.authenticated
       }
     }
   );

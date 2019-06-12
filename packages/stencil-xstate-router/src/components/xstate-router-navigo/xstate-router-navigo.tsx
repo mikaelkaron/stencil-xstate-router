@@ -30,12 +30,15 @@ export class XStateRouterNavigo implements ComponentInterface {
 
   @Listen('click')
   handleClick(event: UIEvent & { path: [HTMLElement] }) {
+    // extract origin element from event
     const {
       path: [el]
     } = event;
-
-    if (el.hasAttribute('href')) {
+    // check that the event origin element was a link with a `href` attribute
+    if (el.tagName === 'a' && el.hasAttribute('href')) {
+      // stop default click action
       event.preventDefault();
+      // navigate to the url
       this.router.navigate(el.getAttribute('href'));
     }
   }
@@ -49,6 +52,7 @@ export class XStateRouterNavigo implements ComponentInterface {
             ? routes
                 // https://github.com/krasimir/navigo/pull/39
                 .sort((a, b) => b.path.length - a.path.length)
+                // map paths to unsubscribe callbacks
                 .map(({ path }) => {
                   const handler = (params: Record<string, any>) =>
                     send({
@@ -56,9 +60,9 @@ export class XStateRouterNavigo implements ComponentInterface {
                       path,
                       params
                     });
-
+                  // subscribe path to history changes
                   this.router.on(path, handler);
-
+                  // return unsubscribe handler
                   return () => this.router.off(path, handler);
                 })
             : []
