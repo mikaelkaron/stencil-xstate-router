@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v0.4.0...v0.5.0) (2019-06-12)
+
+
+### Bug Fixes
+
+* capitalize tagName check ([fc49d59](https://github.com/mikaelkaron/stencil-xstate-router/commit/fc49d59))
+
+
+### Features
+
+* make click interception configurable ([892bc0e](https://github.com/mikaelkaron/stencil-xstate-router/commit/892bc0e))
+* make state.meta merging optional ([9d392a2](https://github.com/mikaelkaron/stencil-xstate-router/commit/9d392a2))
+
+
+### BREAKING CHANGES
+
+* the ROUTED event has changed name to NAVIGATE
+
+
+
 ## [0.4.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v0.3.0...v0.4.0) (2019-06-11)
 
 
