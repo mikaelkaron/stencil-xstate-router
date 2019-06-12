@@ -86,7 +86,7 @@ export class XStateRouterTest {
           on: {
             '': {
               target: 'anonymous',
-              cond: 'noAuth'
+              cond: 'isAnon'
             },
             HOME: {
               target: '.home'
@@ -142,7 +142,7 @@ export class XStateRouterTest {
     },
     {
       guards: {
-        noAuth: ctx => !ctx.authenticated,
+        isAnon: ctx => !ctx.authenticated,
         isAuth: ctx => ctx.authenticated
       }
     }

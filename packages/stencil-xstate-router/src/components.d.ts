@@ -30,11 +30,23 @@ export namespace Components {
     /**
     * Capture clicks from child elements and convert to routes
     */
-    'capture': boolean;
+    'capture'?: boolean;
+    /**
+    * The hash parameter allows you to configure the hash character
+    */
+    'hash'?: string;
     /**
     * An XState machine
     */
     'machine': StateMachine<any, any, EventObject>;
+    /**
+    * The main URL of your application.
+    */
+    'root'?: string;
+    /**
+    * If useHash set to true then the router uses an old routing approach with hash in the URL. Fall back to this mode if there is no History API supported.
+    */
+    'useHash'?: boolean;
   }
   interface XstateRouterNavigoAttributes extends StencilHTMLAttributes {
     /**
@@ -42,9 +54,21 @@ export namespace Components {
     */
     'capture'?: boolean;
     /**
+    * The hash parameter allows you to configure the hash character
+    */
+    'hash'?: string;
+    /**
     * An XState machine
     */
     'machine': StateMachine<any, any, EventObject>;
+    /**
+    * The main URL of your application.
+    */
+    'root'?: string;
+    /**
+    * If useHash set to true then the router uses an old routing approach with hash in the URL. Fall back to this mode if there is no History API supported.
+    */
+    'useHash'?: boolean;
   }
 
   interface XstateRouter {

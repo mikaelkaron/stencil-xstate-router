@@ -13,7 +13,7 @@ import Navigo from 'navigo';
   shadow: false
 })
 export class XStateRouterNavigo implements ComponentInterface {
-  @State() router = new Navigo();
+  @State() router: Navigo;
 
   /**
    * An XState machine
@@ -23,7 +23,26 @@ export class XStateRouterNavigo implements ComponentInterface {
   /**
    * Capture clicks from child elements and convert to routes
    */
-  @Prop() capture: boolean = true;
+  @Prop() capture?: boolean = true;
+
+  /**
+   * The main URL of your application.
+   */
+  @Prop() root?: string;
+
+  /**
+   * If useHash set to true then the router uses an old routing approach with hash in the URL. Fall back to this mode if there is no History API supported.
+   */
+  @Prop() useHash?: boolean = false;
+
+  /**
+   * The hash parameter allows you to configure the hash character
+   */
+  @Prop() hash?: string = '#';
+
+  componentWillLoad() {
+    this.router = new Navigo(this.root, this.useHash, this.hash);
+  }
 
   componentDidLoad() {
     this.router.resolve();
@@ -39,10 +58,14 @@ export class XStateRouterNavigo implements ComponentInterface {
     const {
       path: [el]
     } = event;
-    // check that we're capturing clicks,
-    // that we clicked an anchor,
-    // and that the link has a `href` attribute
-    if (this.capture && el.tagName.toUpperCase() === 'A' && el.hasAttribute('href')) {
+    if (
+      // check that we're capturing clicks,
+      this.capture &&
+      // that we clicked an anchor,
+      el.tagName.toUpperCase() === 'A' &&
+      // and that the link has a `href` attribute
+      el.hasAttribute('href')
+    ) {
       // stop default click action
       event.preventDefault();
       // navigate to the url
@@ -75,7 +98,10 @@ export class XStateRouterNavigo implements ComponentInterface {
             : []
         }
         navigate={url =>
-          url !== window.location.pathname && this.router.navigate(url)
+          // compare location/hash with url and navigate if no match
+          (this.useHash
+            ? window.location.hash !== `${this.hash}${url}`
+            : window.location.pathname !== url) && this.router.navigate(url)
         }
       />
     );
