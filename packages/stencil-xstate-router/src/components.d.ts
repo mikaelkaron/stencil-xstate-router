@@ -28,11 +28,19 @@ export namespace Components {
 
   interface XstateRouterNavigo {
     /**
+    * Capture clicks from child elements and convert to routes
+    */
+    'capture': boolean;
+    /**
     * An XState machine
     */
     'machine': StateMachine<any, any, EventObject>;
   }
   interface XstateRouterNavigoAttributes extends StencilHTMLAttributes {
+    /**
+    * Capture clicks from child elements and convert to routes
+    */
+    'capture'?: boolean;
     /**
     * An XState machine
     */

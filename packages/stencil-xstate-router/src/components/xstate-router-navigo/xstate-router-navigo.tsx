@@ -20,6 +20,11 @@ export class XStateRouterNavigo implements ComponentInterface {
    */
   @Prop() machine!: StateMachine<any, any, EventObject>;
 
+  /**
+   * Capture clicks from child elements and convert to routes
+   */
+  @Prop() capture: boolean = true;
+
   componentDidLoad() {
     this.router.resolve();
   }
@@ -34,8 +39,10 @@ export class XStateRouterNavigo implements ComponentInterface {
     const {
       path: [el]
     } = event;
-    // check that the event origin element was a link with a `href` attribute
-    if (el.tagName.toUpperCase() === 'A' && el.hasAttribute('href')) {
+    // check that we're capturing clicks,
+    // that we clicked an anchor,
+    // and that the link has a `href` attribute
+    if (this.capture && el.tagName.toUpperCase() === 'A' && el.hasAttribute('href')) {
       // stop default click action
       event.preventDefault();
       // navigate to the url
