@@ -35,7 +35,7 @@ export class XStateRouterNavigo implements ComponentInterface {
       path: [el]
     } = event;
     // check that the event origin element was a link with a `href` attribute
-    if (el.tagName === 'a' && el.hasAttribute('href')) {
+    if (el.tagName.toUpperCase() === 'A' && el.hasAttribute('href')) {
       // stop default click action
       event.preventDefault();
       // navigate to the url
