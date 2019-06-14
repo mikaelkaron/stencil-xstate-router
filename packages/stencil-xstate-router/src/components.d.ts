@@ -7,17 +7,15 @@
 
 import '@stencil/core';
 
-import 'stencil-xstate';
+
 import {
   EventObject,
   StateMachine,
 } from 'xstate';
 import {
-  Options,
-} from 'stencil-xstate/dist/types';
-import {
   ComponentRenderer,
   NavigationHandler,
+  RenderInterpreterOptions,
   RouteEventObject,
   RouteHandler,
   StateRenderer,
@@ -85,17 +83,13 @@ export namespace Components {
     */
     'machine': StateMachine<any, any, EventObject>;
     /**
-    * Should state.meta be merged
-    */
-    'merge': boolean;
-    /**
     * Callback for url changes
     */
     'navigate': NavigationHandler;
     /**
     * Interpreter options
     */
-    'options'?: Options;
+    'options'?: RenderInterpreterOptions;
     /**
     * Callback for route subscriptions
     */
@@ -103,7 +97,7 @@ export namespace Components {
     /**
     * State renderer
     */
-    'stateRenderer': StateRenderer<any, any, RouteEventObject>;
+    'stateRenderer'?: StateRenderer<any, any, RouteEventObject>;
   }
   interface XstateRouterAttributes extends StencilHTMLAttributes {
     /**
@@ -119,17 +113,13 @@ export namespace Components {
     */
     'machine': StateMachine<any, any, EventObject>;
     /**
-    * Should state.meta be merged
-    */
-    'merge'?: boolean;
-    /**
     * Callback for url changes
     */
     'navigate': NavigationHandler;
     /**
     * Interpreter options
     */
-    'options'?: Options;
+    'options'?: RenderInterpreterOptions;
     /**
     * Callback for route subscriptions
     */

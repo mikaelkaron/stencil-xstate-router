@@ -98,12 +98,14 @@ export class XStateRouterNavigo implements ComponentInterface {
             : []
         }
         navigate={url =>
-          // compare location/hash with url and navigate if no match
+          // compare hash/pathname with url and navigate if no match
           (this.useHash
-            ? window.location.hash !== `${this.hash}${url}`
-            : window.location.pathname !== url) && this.router.navigate(url)
+            ? location.hash !== `${this.hash}${url}`
+            : location.pathname !== url) && this.router.navigate(url)
         }
-      />
+      >
+        <slot />
+      </xstate-router>
     );
   }
 }

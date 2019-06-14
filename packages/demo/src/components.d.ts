@@ -8,7 +8,6 @@
 import '@stencil/core';
 
 import 'stencil-xstate-router';
-import 'stencil-xstate';
 import {
   Send,
 } from 'stencil-xstate-router/dist/types';

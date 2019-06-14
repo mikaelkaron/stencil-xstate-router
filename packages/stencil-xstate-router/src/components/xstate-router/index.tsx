@@ -1,14 +1,22 @@
-import { Send } from 'stencil-xstate/dist/types';
 import {
   Condition,
   EventObject,
-  GuardMeta,
+  GuardPredicate,
   Interpreter,
+  InterpreterOptions,
+  OmniEventObject,
   State as MachineState,
+  StateMeta,
   StateSchema
 } from 'xstate';
 
-export { Send, MachineState };
+export { MachineState };
+
+export type Send<
+  TContext,
+  TSchema extends StateSchema,
+  TEvent extends EventObject
+> = Interpreter<TContext, TSchema, TEvent>['send'];
 
 export type NavigationHandler = (url: string) => void;
 
@@ -41,6 +49,17 @@ export type ComponentRenderer<
   props?: ComponentProps<TContext, TSchema, TEvent>
 ) => JSX.Element[] | JSX.Element;
 
+export type RenderEventObject = EventObject & {
+  /**
+   * Component to render
+   */
+  component?: string;
+  /**
+   * Render props
+   */
+  props?: Record<string, string>;
+};
+
 export type RouteEventObject = EventObject & {
   /**
    * Path routed to
@@ -63,7 +82,7 @@ export type ComponentProps<
   TContext,
   TSchema extends StateSchema,
   TEvent extends EventObject
-> = RouteMeta & {
+> = {
   /**
    * Current state
    */
@@ -76,24 +95,40 @@ export type ComponentProps<
    * Current service
    */
   service: Interpreter<TContext, TSchema, TEvent>;
-};
-
-export type RouteMeta = Record<string, any> & {
   /**
-   * Component tag
+   * Component to render
    */
   component: string;
+  /**
+   * Component props
+   */
+  props?: Record<string, string>;
 };
 
-export type RouteGuardMeta<
-  TContext,
-  TEvent extends RouteEventObject
-> = GuardMeta<TContext, TEvent> & { cond: RouteEventObject };
+export interface RouteGuardPredicate<TContext, TEvent extends RouteEventObject>
+  extends GuardPredicate<TContext, TEvent> {
+  predicate: RouteConditionPredicate<TContext, OmniEventObject<TEvent>>;
+  path: string;
+}
+
+export type RouteGuard<TContext, TEvent extends RouteEventObject> =
+  | RouteGuardPredicate<TContext, TEvent>
+  | (Record<string, any> & {
+      type: string;
+      path: string;
+    });
+
+export interface RouteGuardMeta<TContext, TEvent extends RouteEventObject>
+  extends StateMeta<TContext, TEvent> {
+  cond: RouteGuard<TContext, TEvent>;
+}
 
 export type RouteCondition<
   TContext,
   TEvent extends RouteEventObject
-> = RouteEventObject & Condition<TContext, TEvent>;
+> = Condition<TContext, TEvent> & {
+  path?: string;
+};
 
 export type RouteConditionPredicate<
   TContext,
@@ -109,10 +144,10 @@ export type RouteConditionPredicate<
  * @param source XState.State meta object
  * @param target Target object
  */
-export const merge: <T extends RouteMeta>(source: T, target?: T | {}) => T = (
-  source,
-  target = {}
-) =>
+export const mergeMeta: <T extends Record<string, any>>(
+  source: T,
+  target?: T | {}
+) => T = (source, target = {}) =>
   Object.keys(source).reduce(
     (result, key) => Object.assign(result, source[key]),
     target
@@ -130,12 +165,19 @@ export const renderComponent: ComponentRenderer<any, any, EventObject> = (
 
 /**
  * Guards a route
- * @param _ Context
+ * @param context Context
  * @param event Event
- * @param param2 Meta
+ * @param meta Meta
  */
 export const routeGuard: RouteConditionPredicate<any, RouteEventObject> = (
   _,
   event,
   { cond }
 ) => event.path === cond.path;
+
+/**
+ * Render interpreter options
+ */
+export interface RenderInterpreterOptions extends Partial<InterpreterOptions> {
+  merge?: boolean;
+}
