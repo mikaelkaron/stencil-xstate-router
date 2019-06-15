@@ -1,5 +1,5 @@
 import {
-  Condition,
+  ActionObject,
   EventObject,
   GuardPredicate,
   Interpreter,
@@ -7,7 +7,8 @@ import {
   OmniEventObject,
   State as MachineState,
   StateMeta,
-  StateSchema
+  StateSchema,
+  TransitionConfig
 } from 'xstate';
 
 export { MachineState };
@@ -123,13 +124,6 @@ export interface RouteGuardMeta<TContext, TEvent extends RouteEventObject>
   cond: RouteGuard<TContext, TEvent>;
 }
 
-export type RouteCondition<
-  TContext,
-  TEvent extends RouteEventObject
-> = Condition<TContext, TEvent> & {
-  path?: string;
-};
-
 export type RouteConditionPredicate<
   TContext,
   TEvent extends RouteEventObject
@@ -138,6 +132,16 @@ export type RouteConditionPredicate<
   event: TEvent,
   meta: RouteGuardMeta<TContext, TEvent>
 ) => boolean;
+
+export interface RouteTransitionDefinition<
+  TContext,
+  TEvent extends RouteEventObject
+> extends TransitionConfig<TContext, TEvent> {
+  target: string[] | undefined;
+  actions: Array<ActionObject<TContext, TEvent>>;
+  cond?: RouteGuard<TContext, TEvent>;
+  event: string;
+}
 
 /**
  * Merges meta objects

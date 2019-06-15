@@ -9,7 +9,7 @@ import {
   renderComponent,
   RenderEventObject,
   RenderInterpreterOptions,
-  RouteCondition,
+  RouteTransitionDefinition,
   RouteEventObject,
   routeGuard,
   RouteHandler,
@@ -55,14 +55,16 @@ export class XStateRouter implements ComponentInterface {
   /**
    * Callback for route subscriptions
    */
-  @Prop() route!: RouteHandler<any, any, RouteEventObject>;
+  @Prop() route: RouteHandler<any, any, RouteEventObject> = () => [];
 
   /**
    * Callback for url changes
    */
-  @Prop() navigate!: NavigationHandler;
+  @Prop() navigate: NavigationHandler = () => {};
 
   componentWillLoad() {
+    const { route, navigate } = this;
+
     // configure maching with route guard
     const machine = this.machine.withConfig({
       guards: {
@@ -70,20 +72,21 @@ export class XStateRouter implements ComponentInterface {
       }
     });
     // extract routes from machine
-    const routes = machine.on['ROUTE'];
-    if (!routes) {
-      throw new Error('no ROUTE events found on root node');
-    }
+    const routes = machine.on['ROUTE'] as RouteTransitionDefinition<
+      any,
+      RouteEventObject
+    >[];
     // create service that triggers RENDER on matching transitions
     const service = interpret(machine, this.options);
     const { send, initialState } = service;
-    // loop routes and add route subscribe/unsubscribe
-    routes.forEach(
-      ({ cond: { path } }: { cond?: RouteCondition<any, RouteEventObject> }) =>
-        this.route([{ path }], send).forEach(unsubscribe =>
+    if (route && routes) {
+      // loop routes and add route subscribe/unsubscribe
+      routes.forEach(({ cond: { path } }) =>
+        route([{ path }], send).forEach(unsubscribe =>
           this.subscriptions.add(unsubscribe)
         )
-    );
+      );
+    }
     service
       // add transition handler that triggers RENDER on state transition
       .onTransition(state => {
@@ -114,7 +117,9 @@ export class XStateRouter implements ComponentInterface {
         switch (event.type) {
           case 'NAVIGATE':
             const { url } = event;
-            this.navigate(url);
+            if (navigate) {
+              navigate(url);
+            }
             break;
 
           case 'RENDER':

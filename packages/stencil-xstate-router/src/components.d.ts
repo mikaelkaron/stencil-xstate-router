@@ -145,7 +145,7 @@ export namespace Components {
     /**
     * Callback for url changes
     */
-    'navigate': NavigationHandler;
+    'navigate'?: NavigationHandler;
     /**
     * Interpreter options
     */
@@ -153,7 +153,7 @@ export namespace Components {
     /**
     * Callback for route subscriptions
     */
-    'route': RouteHandler<any, any, RouteEventObject>;
+    'route'?: RouteHandler<any, any, RouteEventObject>;
     /**
     * State renderer
     */
