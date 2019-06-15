@@ -76,7 +76,7 @@ export class XStateRouter implements ComponentInterface {
     }
     // create service that triggers RENDER on matching transitions
     const service = interpret(machine, this.options);
-    const { send } = service;
+    const { send, initialState } = service;
     // loop routes and add route subscribe/unsubscribe
     routes.forEach(
       ({ cond: { path } }: { cond?: RouteCondition<any, RouteEventObject> }) =>
@@ -87,8 +87,8 @@ export class XStateRouter implements ComponentInterface {
     service
       // add transition handler that triggers RENDER on state transition
       .onTransition(state => {
-        // return fast if state has not changed
-        if (!state.changed) {
+        // return fast if state has not changed and is not the initial state
+        if (!state.changed && state !== initialState) {
           return;
         }
         // default merge to true if not passed in options
