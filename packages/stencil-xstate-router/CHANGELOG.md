@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.1](https://github.com/mikaelkaron/stencil-xstate-router/compare/v0.7.0...v0.7.1) (2019-06-15)
+
+
+### Bug Fixes
+
+* render on initial state ([56b1c1c](https://github.com/mikaelkaron/stencil-xstate-router/commit/56b1c1c))
+
+
+
 ## [0.7.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v0.6.0...v0.7.0) (2019-06-14)
 
 
