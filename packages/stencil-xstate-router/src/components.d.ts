@@ -14,11 +14,17 @@ import {
 } from 'xstate';
 import {
   ComponentRenderer,
-  NavigationHandler,
   RenderInterpreterOptions,
   RouteEventObject,
-  RouteHandler,
   StateRenderer,
+} from '.';
+import {
+  ComponentRenderer as ComponentRenderer2,
+  NavigationHandler,
+  RenderInterpreterOptions as RenderInterpreterOptions2,
+  RouteEventObject as RouteEventObject2,
+  RouteHandler,
+  StateRenderer as StateRenderer2,
 } from './components/xstate-router/index';
 
 
@@ -30,6 +36,10 @@ export namespace Components {
     */
     'capture'?: boolean;
     /**
+    * Component renderer
+    */
+    'componentRenderer': ComponentRenderer<any, any, EventObject>;
+    /**
     * The hash parameter allows you to configure the hash character
     */
     'hash'?: string;
@@ -38,9 +48,17 @@ export namespace Components {
     */
     'machine': StateMachine<any, any, EventObject>;
     /**
+    * Interpreter options
+    */
+    'options'?: RenderInterpreterOptions;
+    /**
     * The main URL of your application.
     */
     'root'?: string;
+    /**
+    * State renderer
+    */
+    'stateRenderer'?: StateRenderer<any, any, RouteEventObject>;
     /**
     * If useHash set to true then the router uses an old routing approach with hash in the URL. Fall back to this mode if there is no History API supported.
     */
@@ -52,6 +70,10 @@ export namespace Components {
     */
     'capture'?: boolean;
     /**
+    * Component renderer
+    */
+    'componentRenderer'?: ComponentRenderer<any, any, EventObject>;
+    /**
     * The hash parameter allows you to configure the hash character
     */
     'hash'?: string;
@@ -60,9 +82,17 @@ export namespace Components {
     */
     'machine': StateMachine<any, any, EventObject>;
     /**
+    * Interpreter options
+    */
+    'options'?: RenderInterpreterOptions;
+    /**
     * The main URL of your application.
     */
     'root'?: string;
+    /**
+    * State renderer
+    */
+    'stateRenderer'?: StateRenderer<any, any, RouteEventObject>;
     /**
     * If useHash set to true then the router uses an old routing approach with hash in the URL. Fall back to this mode if there is no History API supported.
     */

@@ -1,12 +1,18 @@
 import {
   Component,
-  State,
-  Prop,
   ComponentInterface,
-  Listen
+  Listen,
+  Prop,
+  State
 } from '@stencil/core';
-import { StateMachine, EventObject } from 'xstate';
 import Navigo from 'navigo';
+import { EventObject, StateMachine } from 'xstate';
+import {
+  ComponentRenderer,
+  RenderInterpreterOptions,
+  RouteEventObject,
+  StateRenderer
+} from '../..';
 
 @Component({
   tag: 'xstate-router-navigo',
@@ -21,6 +27,21 @@ export class XStateRouterNavigo implements ComponentInterface {
   @Prop() machine!: StateMachine<any, any, EventObject>;
 
   /**
+   * Interpreter options
+   */
+  @Prop() options?: RenderInterpreterOptions;
+
+  /**
+   * State renderer
+   */
+  @Prop() stateRenderer?: StateRenderer<any, any, RouteEventObject>;
+
+  /**
+   * Component renderer
+   */
+  @Prop() componentRenderer: ComponentRenderer<any, any, EventObject>;
+
+  /**
    * Capture clicks from child elements and convert to routes
    */
   @Prop() capture?: boolean = true;
@@ -31,7 +52,8 @@ export class XStateRouterNavigo implements ComponentInterface {
   @Prop() root?: string;
 
   /**
-   * If useHash set to true then the router uses an old routing approach with hash in the URL. Fall back to this mode if there is no History API supported.
+   * If useHash set to true then the router uses an old routing approach with hash in the URL.
+   * Fall back to this mode if there is no History API supported.
    */
   @Prop() useHash?: boolean = false;
 
@@ -74,6 +96,7 @@ export class XStateRouterNavigo implements ComponentInterface {
   }
 
   render() {
+    const { options, stateRenderer, componentRenderer } = this;
     return (
       <xstate-router
         machine={this.machine}
@@ -103,6 +126,8 @@ export class XStateRouterNavigo implements ComponentInterface {
             ? location.hash !== `${this.hash}${url}`
             : location.pathname !== url) && this.router.navigate(url)
         }
+        // pass down config to router
+        {...{ options, stateRenderer, componentRenderer }}
       >
         <slot />
       </xstate-router>
