@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.1](https://github.com/mikaelkaron/stencil-xstate-router/compare/v0.8.0...v0.8.1) (2019-06-15)
+
+
+### Bug Fixes
+
+* make route/navigate optional ([9b499ec](https://github.com/mikaelkaron/stencil-xstate-router/commit/9b499ec))
+
+
+
 ## [0.8.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v0.7.1...v0.8.0) (2019-06-15)
 
 
