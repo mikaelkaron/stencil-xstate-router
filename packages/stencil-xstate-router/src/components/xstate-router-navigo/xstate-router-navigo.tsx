@@ -75,11 +75,11 @@ export class XStateRouterNavigo implements ComponentInterface {
   }
 
   @Listen('click')
-  handleClick(event: UIEvent & { path: [HTMLElement] }) {
-    // extract origin element from event
-    const {
-      path: [el]
-    } = event;
+  handleClick(event: Event) {
+    // extract origin element from event taking into account shadow DOM
+    const el = (event.composed
+      ? event.composedPath()[0]
+      : event.target) as Element;
     if (
       // check that we're capturing clicks,
       this.capture &&
