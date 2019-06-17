@@ -83,9 +83,11 @@ export class XStateRouterNavigo implements ComponentInterface {
     if (
       // check that we're capturing clicks,
       this.capture &&
+      // that nobody else handled this already
+      !event.defaultPrevented &&
       // that we clicked an anchor,
       el.tagName.toUpperCase() === 'A' &&
-      // and that the link has a `href` attribute
+      // that the link has a `href` attribute
       el.hasAttribute('href')
     ) {
       // stop default click action
