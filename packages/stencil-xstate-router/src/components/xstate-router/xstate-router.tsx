@@ -1,7 +1,6 @@
 import { Component, ComponentInterface, Prop, State } from '@stencil/core';
 import { EventObject, Interpreter, StateMachine, interpret } from 'xstate';
 import {
-  ComponentProps,
   ComponentRenderer,
   mergeMeta,
   NavigationEventObject,
@@ -23,9 +22,9 @@ import {
 export class XStateRouter implements ComponentInterface {
   @State() private subscriptions: Set<VoidFunction> = new Set();
   @State() private service: Interpreter<any, any, EventObject>;
-  @State() private rendered: {
+  @State() private target: {
     component: string;
-    props: ComponentProps<any, any, EventObject>;
+    params: Record<string, any>;
   };
 
   /**
@@ -102,13 +101,10 @@ export class XStateRouter implements ComponentInterface {
           : state.meta;
         // if there's a component, issue render
         if (component) {
-          // default to DefaultContext
-          const { context = {} } = state;
-          // send RENDER event with RenderEventObject
+          // send RENDER event with payload
           send('RENDER', {
             component,
-            // combine state.meta.params with state.context.params
-            props: { ...params, ...context.params }
+            params: { ...params, ...state.context.params }
           });
         }
       })
@@ -123,17 +119,11 @@ export class XStateRouter implements ComponentInterface {
             break;
 
           case 'RENDER':
-            const { component, props } = event;
-            const { state: current } = service;
+            const { component, params } = event;
             if (component) {
-              this.rendered = {
+              this.target = {
                 component,
-                props: {
-                  ...props,
-                  current,
-                  send,
-                  service
-                }
+                params
               };
             }
             break;
@@ -157,19 +147,26 @@ export class XStateRouter implements ComponentInterface {
 
   render() {
     // return fast if we have nothing to render
-    if (this.rendered === undefined) {
+    if (this.target === undefined) {
       return;
     }
 
-    const { component, props } = this.rendered;
     const { service } = this;
-    const { state, send } = service;
+    const { state: current, send } = service;
+    const { component, params } = this.target;
+    const props = {
+      component,
+      current,
+      send,
+      service,
+      ...params
+    };
 
     return this.stateRenderer
       ? // if there's a stateRenderer render component and pass
         this.stateRenderer(
           this.componentRenderer(component, props),
-          state,
+          current,
           send,
           service
         )

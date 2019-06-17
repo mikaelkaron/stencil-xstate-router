@@ -56,9 +56,9 @@ export type RenderEventObject = EventObject & {
    */
   component?: string;
   /**
-   * Render props
+   * Component params
    */
-  props?: Record<string, string>;
+  params?: Record<string, any>;
 };
 
 export type RouteEventObject = EventObject & {
@@ -100,11 +100,7 @@ export type ComponentProps<
    * Component to render
    */
   component: string;
-  /**
-   * Component props
-   */
-  props?: Record<string, string>;
-};
+} & Record<string, any>;
 
 export interface RouteGuardPredicate<TContext, TEvent extends RouteEventObject>
   extends GuardPredicate<TContext, TEvent> {
