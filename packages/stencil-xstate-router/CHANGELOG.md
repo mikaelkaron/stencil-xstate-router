@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.2](https://github.com/mikaelkaron/stencil-xstate-router/compare/v0.8.1...v0.8.2) (2019-06-17)
+
+
+### Bug Fixes
+
+* don't save state/send/service on render target ([5e03ece](https://github.com/mikaelkaron/stencil-xstate-router/commit/5e03ece))
+
+
+
 ### [0.8.1](https://github.com/mikaelkaron/stencil-xstate-router/compare/v0.8.0...v0.8.1) (2019-06-15)
 
 
