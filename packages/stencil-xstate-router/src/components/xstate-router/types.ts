@@ -3,12 +3,13 @@ import {
   EventObject,
   GuardPredicate,
   Interpreter,
+  InterpreterOptions,
   OmniEventObject,
   State as RouterState,
+  StateMachine,
   StateMeta,
   StateSchema,
-  TransitionConfig,
-  InterpreterOptions,
+  TransitionConfig
 } from 'xstate';
 
 export { RouterState };
@@ -81,6 +82,19 @@ export type NavigationEvent = EventObject & {
    * URL routed to
    */
   url?: string;
+};
+
+export type RouterProps<
+  TContext,
+  TSchema extends StateSchema,
+  TEvent extends EventObject
+> = {
+  machine: StateMachine<TContext, TSchema, TEvent>;
+  options?: RouterInterpreterOptions;
+  stateRenderer?: StateRenderer<any, any, RouteEvent>;
+  componentRenderer?: ComponentRenderer<any, any, EventObject>;
+  route?: RouteHandler<any, any, RouteEvent>;
+  navigate?: NavigationHandler;
 };
 
 export type ComponentProps<

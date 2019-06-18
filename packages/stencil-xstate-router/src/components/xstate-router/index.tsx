@@ -1,9 +1,40 @@
-import { EventObject } from 'xstate';
+import { EventObject, StateSchema } from 'xstate';
 import {
   ComponentRenderer,
   RouteConditionPredicate,
-  RouteEvent
+  RouteEvent,
+  RouterProps
 } from './types';
+
+export * from './types';
+
+/**
+ * Functional component wrapper for XstateRouter
+ * @param props Component props
+ * @param children Component children
+ */
+export const Router: <
+  TContext,
+  TSchema extends StateSchema,
+  TEvent extends EventObject
+>(
+  props: RouterProps<TContext, TSchema, TEvent>,
+  children?: JSX.Element[]
+) => JSX.Element = (
+  { machine, options, route, navigate, stateRenderer, componentRenderer },
+  children
+) => (
+  <xstate-router
+    machine={machine}
+    options={options}
+    route={route}
+    navigate={navigate}
+    stateRenderer={stateRenderer}
+    componentRenderer={componentRenderer}
+  >
+    {children}
+  </xstate-router>
+);
 
 /**
  * Merges meta objects
@@ -27,7 +58,7 @@ export const mergeMeta: <T extends Record<string, any>>(
 export const renderComponent: ComponentRenderer<any, any, EventObject> = (
   Component,
   props
-) => ({ tagName: Component, ...props });
+) => <Component {...props} />;
 
 /**
  * Guards a route
@@ -40,3 +71,5 @@ export const routeGuard: RouteConditionPredicate<any, RouteEvent> = (
   event,
   { cond }
 ) => event.path === cond.path;
+
+export default Router;

@@ -18,7 +18,7 @@ import {
   tag: 'xstate-router-navigo',
   shadow: false
 })
-export class XStateRouterNavigo implements ComponentInterface {
+export class XstateRouterNavigo implements ComponentInterface {
   @State() router: Navigo;
 
   /**

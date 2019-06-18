@@ -1,6 +1,6 @@
 import { Component, ComponentInterface, Prop, State } from '@stencil/core';
 import { EventObject, interpret, Interpreter, StateMachine } from 'xstate';
-import { mergeMeta, renderComponent, routeGuard } from './utils';
+import { mergeMeta, renderComponent, routeGuard } from '.';
 import {
   ComponentRenderer,
   NavigationEvent,
@@ -17,7 +17,7 @@ import {
   tag: 'xstate-router',
   shadow: false
 })
-export class XStateRouter implements ComponentInterface {
+export class XstateRouter implements ComponentInterface {
   @State() private subscriptions: Set<VoidFunction> = new Set();
   @State() private service: Interpreter<any, any, EventObject>;
   @State() private rendered: {
