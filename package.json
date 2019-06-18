@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "lerna": "lerna"
+  },
   "devDependencies": {
     "lerna": "^3.14.1"
   },
