@@ -1,6 +1,6 @@
 import { Component, ComponentInterface, Prop, State } from '@stencil/core';
 import { EventObject, interpret, Interpreter, StateMachine } from 'xstate';
-import { mergeMeta, renderComponent, routeGuard } from '.';
+import { mergeMeta, renderComponent, routeGuard } from './utils';
 import {
   ComponentRenderer,
   NavigationEvent,
