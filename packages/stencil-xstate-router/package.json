@@ -14,20 +14,13 @@
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll",
-    "release": "standard-version"
+    "test.watch": "stencil test --spec --e2e --watchAll"
   },
   "devDependencies": {
     "@stencil/core": "0.18.0",
     "@types/navigo": "^7.0.1",
     "navigo": "7.1.2",
-    "standard-version": "^6.0.1",
     "xstate": "^4.6.1"
-  },
-  "standard-version": {
-    "scripts": {
-      "prerelease": "npm run build"
-    }
   },
   "license": "MIT",
   "peerDependencies": {
