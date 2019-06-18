@@ -1,19 +1,17 @@
 import { Component, ComponentInterface, Prop, State } from '@stencil/core';
-import { EventObject, Interpreter, StateMachine, interpret } from 'xstate';
+import { EventObject, interpret, Interpreter, StateMachine } from 'xstate';
+import { mergeMeta, renderComponent, routeGuard } from './utils';
 import {
   ComponentRenderer,
-  mergeMeta,
-  NavigationEventObject,
+  NavigationEvent,
   NavigationHandler,
-  renderComponent,
-  RenderEventObject,
-  RenderInterpreterOptions,
-  RouteTransitionDefinition,
-  RouteEventObject,
-  routeGuard,
+  RenderEvent,
+  RouteEvent,
   RouteHandler,
+  RouterInterpreterOptions,
+  RouteTransitionDefinition,
   StateRenderer
-} from './index';
+} from './types';
 
 @Component({
   tag: 'xstate-router',
@@ -22,9 +20,10 @@ import {
 export class XStateRouter implements ComponentInterface {
   @State() private subscriptions: Set<VoidFunction> = new Set();
   @State() private service: Interpreter<any, any, EventObject>;
-  @State() private target: {
+  @State() private rendered: {
     component: string;
-    params: Record<string, any>;
+    slot?: string;
+    params?: Record<string, any>;
   };
 
   /**
@@ -35,12 +34,12 @@ export class XStateRouter implements ComponentInterface {
   /**
    * Interpreter options
    */
-  @Prop() options?: RenderInterpreterOptions;
+  @Prop() options?: RouterInterpreterOptions;
 
   /**
    * State renderer
    */
-  @Prop() stateRenderer?: StateRenderer<any, any, RouteEventObject>;
+  @Prop() stateRenderer?: StateRenderer<any, any, RouteEvent>;
 
   /**
    * Component renderer
@@ -54,7 +53,7 @@ export class XStateRouter implements ComponentInterface {
   /**
    * Callback for route subscriptions
    */
-  @Prop() route: RouteHandler<any, any, RouteEventObject> = () => [];
+  @Prop() route: RouteHandler<any, any, RouteEvent> = () => [];
 
   /**
    * Callback for url changes
@@ -73,7 +72,7 @@ export class XStateRouter implements ComponentInterface {
     // extract routes from machine
     const routes = machine.on['ROUTE'] as RouteTransitionDefinition<
       any,
-      RouteEventObject
+      RouteEvent
     >[];
     // create service that triggers RENDER on matching transitions
     const service = interpret(machine, this.options);
@@ -96,7 +95,7 @@ export class XStateRouter implements ComponentInterface {
         // default merge to true if not passed in options
         const { merge = true } = this.options || {};
         // optionally merge state.meta before descruction
-        const { component, params } = merge
+        const { component, params, slot } = merge
           ? mergeMeta(state.meta)
           : state.meta;
         // if there's a component, issue render
@@ -104,12 +103,13 @@ export class XStateRouter implements ComponentInterface {
           // send RENDER event with payload
           send('RENDER', {
             component,
+            slot,
             params: { ...params, ...state.context.params }
           });
         }
       })
       // add event NAVIGATE and RENDER handlers to service
-      .onEvent((event: NavigationEventObject | RenderEventObject) => {
+      .onEvent((event: NavigationEvent | RenderEvent) => {
         switch (event.type) {
           case 'NAVIGATE':
             const { url } = event;
@@ -119,10 +119,11 @@ export class XStateRouter implements ComponentInterface {
             break;
 
           case 'RENDER':
-            const { component, params } = event;
+            const { component, slot, params } = event;
             if (component) {
-              this.target = {
+              this.rendered = {
                 component,
+                slot,
                 params
               };
             }
@@ -147,18 +148,18 @@ export class XStateRouter implements ComponentInterface {
 
   render() {
     // return fast if we have nothing to render
-    if (this.target === undefined) {
+    if (this.rendered === undefined) {
       return;
     }
 
     const { service } = this;
     const { state: current, send } = service;
-    const { component, params } = this.target;
+    const { component, params, slot } = this.rendered;
     const props = {
-      component,
       current,
       send,
       service,
+      slot,
       ...params
     };
 

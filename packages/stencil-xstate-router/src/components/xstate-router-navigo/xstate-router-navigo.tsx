@@ -9,10 +9,10 @@ import Navigo from 'navigo';
 import { EventObject, StateMachine } from 'xstate';
 import {
   ComponentRenderer,
-  RenderInterpreterOptions,
-  RouteEventObject,
+  RouteEvent,
+  RouterInterpreterOptions,
   StateRenderer
-} from '../..';
+} from '../xstate-router/types';
 
 @Component({
   tag: 'xstate-router-navigo',
@@ -29,12 +29,12 @@ export class XStateRouterNavigo implements ComponentInterface {
   /**
    * Interpreter options
    */
-  @Prop() options?: RenderInterpreterOptions;
+  @Prop() options?: RouterInterpreterOptions;
 
   /**
    * State renderer
    */
-  @Prop() stateRenderer?: StateRenderer<any, any, RouteEventObject>;
+  @Prop() stateRenderer?: StateRenderer<any, any, RouteEvent>;
 
   /**
    * Component renderer

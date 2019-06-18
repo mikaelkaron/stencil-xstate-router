@@ -14,18 +14,12 @@ import {
 } from 'xstate';
 import {
   ComponentRenderer,
-  RenderInterpreterOptions,
-  RouteEventObject,
-  StateRenderer,
-} from '.';
-import {
-  ComponentRenderer as ComponentRenderer2,
   NavigationHandler,
-  RenderInterpreterOptions as RenderInterpreterOptions2,
-  RouteEventObject as RouteEventObject2,
+  RouteEvent,
   RouteHandler,
-  StateRenderer as StateRenderer2,
-} from './components/xstate-router/index';
+  RouterInterpreterOptions,
+  StateRenderer,
+} from './components/xstate-router/types';
 
 
 export namespace Components {
@@ -50,7 +44,7 @@ export namespace Components {
     /**
     * Interpreter options
     */
-    'options'?: RenderInterpreterOptions;
+    'options'?: RouterInterpreterOptions;
     /**
     * The main URL of your application.
     */
@@ -58,7 +52,7 @@ export namespace Components {
     /**
     * State renderer
     */
-    'stateRenderer'?: StateRenderer<any, any, RouteEventObject>;
+    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
     /**
     * If useHash set to true then the router uses an old routing approach with hash in the URL. Fall back to this mode if there is no History API supported.
     */
@@ -84,7 +78,7 @@ export namespace Components {
     /**
     * Interpreter options
     */
-    'options'?: RenderInterpreterOptions;
+    'options'?: RouterInterpreterOptions;
     /**
     * The main URL of your application.
     */
@@ -92,7 +86,7 @@ export namespace Components {
     /**
     * State renderer
     */
-    'stateRenderer'?: StateRenderer<any, any, RouteEventObject>;
+    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
     /**
     * If useHash set to true then the router uses an old routing approach with hash in the URL. Fall back to this mode if there is no History API supported.
     */
@@ -119,15 +113,15 @@ export namespace Components {
     /**
     * Interpreter options
     */
-    'options'?: RenderInterpreterOptions;
+    'options'?: RouterInterpreterOptions;
     /**
     * Callback for route subscriptions
     */
-    'route': RouteHandler<any, any, RouteEventObject>;
+    'route': RouteHandler<any, any, RouteEvent>;
     /**
     * State renderer
     */
-    'stateRenderer'?: StateRenderer<any, any, RouteEventObject>;
+    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
   }
   interface XstateRouterAttributes extends StencilHTMLAttributes {
     /**
@@ -149,15 +143,15 @@ export namespace Components {
     /**
     * Interpreter options
     */
-    'options'?: RenderInterpreterOptions;
+    'options'?: RouterInterpreterOptions;
     /**
     * Callback for route subscriptions
     */
-    'route'?: RouteHandler<any, any, RouteEventObject>;
+    'route'?: RouteHandler<any, any, RouteEvent>;
     /**
     * State renderer
     */
-    'stateRenderer'?: StateRenderer<any, any, RouteEventObject>;
+    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
   }
 }
 
