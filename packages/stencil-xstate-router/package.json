@@ -1,6 +1,6 @@
 {
   "name": "stencil-xstate-router",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "XState tools for Stencil and routing",
   "module": "dist/esm/index.js",
   "main": "dist/index.js",
