@@ -13,13 +13,15 @@ import {
   RouterInterpreterOptions,
   StateRenderer
 } from '../xstate-router/types';
+import RouteRecognizer from 'route-recognizer';
 
 @Component({
   tag: 'xstate-router-navigo',
   shadow: false
 })
 export class XstateRouterNavigo implements ComponentInterface {
-  @State() router: Navigo;
+  @State() private routes = new RouteRecognizer();
+  @State() private router: Navigo;
 
   /**
    * An XState machine
@@ -90,10 +92,17 @@ export class XstateRouterNavigo implements ComponentInterface {
       // that the link has a `href` attribute
       el.hasAttribute('href')
     ) {
-      // stop default click action
-      event.preventDefault();
-      // navigate to the url
-      this.router.navigate(el.getAttribute('href'));
+      // normalize href attribute
+      const href = el
+        .getAttribute('href')
+        .replace(new RegExp(`^${this.hash}`), '');
+      // check if we recognize this url
+      if (this.routes.recognize(href)) {
+        // stop default click action
+        event.preventDefault();
+        // navigate to the url
+        this.router.navigate(href);
+      }
     }
   }
 
@@ -105,8 +114,6 @@ export class XstateRouterNavigo implements ComponentInterface {
         route={(routes, send) =>
           routes
             ? routes
-                // https://github.com/krasimir/navigo/pull/39
-                .sort((a, b) => b.path.length - a.path.length)
                 // map paths to unsubscribe callbacks
                 .map(({ path }) => {
                   const handler = (params: Record<string, any>) =>
@@ -115,6 +122,8 @@ export class XstateRouterNavigo implements ComponentInterface {
                       path,
                       params
                     });
+                  // add path to this.routes
+                  this.routes.add([{ path, handler }]);
                   // subscribe path to history changes
                   this.router.on(path, handler);
                   // return unsubscribe handler

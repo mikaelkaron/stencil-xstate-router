@@ -26,5 +26,8 @@
   "peerDependencies": {
     "navigo": "^7.1.2",
     "xstate": "^4.6.1"
+  },
+  "dependencies": {
+    "route-recognizer": "^0.3.4"
   }
 }
