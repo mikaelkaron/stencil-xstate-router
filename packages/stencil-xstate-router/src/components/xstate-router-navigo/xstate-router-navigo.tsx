@@ -15,6 +15,17 @@ import {
 } from '../xstate-router/types';
 import RouteRecognizer from 'route-recognizer';
 
+const composedPath = (target: Element) => {
+  const path = [];
+  let node: Node = target;
+  while (node.parentNode !== null) {
+    path.push(node);
+    node = node.parentNode;
+  }
+  path.push(document, window);
+  return path as Element[];
+};
+
 @Component({
   tag: 'xstate-router-navigo',
   shadow: false
@@ -83,20 +94,26 @@ export class XstateRouterNavigo implements ComponentInterface {
 
   @Listen('click')
   handleClick(event: Event) {
-    // extract origin element from event taking into account shadow DOM
-    const el = (event.composed
-      ? event.composedPath()[0]
-      : event.target) as Element;
-    if (
-      // check that we're capturing clicks,
-      this.capture &&
-      // that nobody else handled this already
-      !event.defaultPrevented &&
-      // that the link has a `href` attribute
-      el.hasAttribute('href')
-    ) {
+    // normalize event path
+    const path = event.composed
+      ? (event.composedPath() as Element[])
+      : composedPath(event.target as Element);
+    // extract link element from event taking into account shadow DOM
+    const link = path.find(
+      el =>
+        // make sure this is _really_ an Element
+        el.nodeType === Node.ELEMENT_NODE &&
+        // and that we're a link
+        el.tagName.toLowerCase() === 'a' &&
+        // and that we have a href attribute
+        el.hasAttribute('href')
+    );
+    // check that we found a link,
+    // are capturing clicks
+    // and that nobody else handled this already
+    if (link && this.capture && !event.defaultPrevented) {
       // normalize href attribute
-      const href = el
+      const href = link
         .getAttribute('href')
         .replace(new RegExp(`^${this.hash}`), '');
       // check if we recognize this url
