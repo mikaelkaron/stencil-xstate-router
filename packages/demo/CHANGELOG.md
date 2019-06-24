@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v1.1.1...v2.0.0) (2019-06-24)
+
+
+### Features
+
+* Next generation auto routing ([d3fe0df](https://github.com/mikaelkaron/stencil-xstate-router/commit/d3fe0df))
+
+
+### BREAKING CHANGES
+
+* Remove NAVIGATE action from your charts
+
+
+
+
+
 ## [1.1.1](https://github.com/mikaelkaron/stencil-xstate-router/compare/v1.1.0...v1.1.1) (2019-06-21)
 
 **Note:** Version bump only for package stencil-xstate-demo
