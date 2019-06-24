@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1](https://github.com/mikaelkaron/stencil-xstate-router/compare/v2.0.0...v2.0.1) (2019-06-24)
+
+
+### Bug Fixes
+
+* make ionic compat ([71d5e97](https://github.com/mikaelkaron/stencil-xstate-router/commit/71d5e97))
+
+
+
+
+
 # [2.0.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v1.1.1...v2.0.0) (2019-06-24)
 
 
