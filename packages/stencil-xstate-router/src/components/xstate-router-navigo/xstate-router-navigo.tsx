@@ -92,8 +92,6 @@ export class XstateRouterNavigo implements ComponentInterface {
       this.capture &&
       // that nobody else handled this already
       !event.defaultPrevented &&
-      // that we clicked an anchor,
-      el.tagName.toLowerCase() === 'a' &&
       // that the link has a `href` attribute
       el.hasAttribute('href')
     ) {
