@@ -1,5 +1,5 @@
 import { Component, State } from '@stencil/core';
-import { Machine, assign, send } from 'xstate';
+import { Machine, assign } from 'xstate';
 import 'stencil-xstate-router';
 
 type Context = {
@@ -34,37 +34,17 @@ export class XStateRouterTest {
         authenticated: {
           initial: 'home',
           states: {
-            home: {
-              entry: send({
-                type: 'NAVIGATE',
-                url: '/'
-              })
-            },
-            account: {
-              entry: send({
-                type: 'NAVIGATE',
-                url: '/account'
-              })
-            },
+            home: {},
+            woot: {},
+            account: {},
             test: {
               initial: 'overview',
               states: {
-                overview: {
-                  entry: send({
-                    type: 'NAVIGATE',
-                    url: '/tests'
-                  })
-                },
+                overview: {},
                 details: {
-                  entry: [
-                    assign({
-                      params: (ctx, event) => event.params || ctx.params
-                    }),
-                    send(ctx => ({
-                      type: 'NAVIGATE',
-                      url: `/tests/${ctx.params.testId}`
-                    }))
-                  ]
+                  entry: assign({
+                    params: (ctx, event) => event.params || ctx.params
+                  })
                 }
               },
               on: {
@@ -108,6 +88,7 @@ export class XStateRouterTest {
           actions: [assign({ authenticated: false })],
           target: 'anonymous'
         },
+        WOOT: 'authenticated.woot',
         ROUTE: [
           {
             target: 'authenticated.home',
@@ -149,6 +130,6 @@ export class XStateRouterTest {
   );
 
   render() {
-    return <xstate-router-navigo machine={this.machine} />;
+    return <xstate-router-navigo machine={this.machine} routes={{ROUTE: '', WOOT: '/woot'}} />;
   }
 }

@@ -50,6 +50,10 @@ export namespace Components {
     */
     'root'?: string;
     /**
+    * Routes to register
+    */
+    'routes'?: Record<string, string>;
+    /**
     * State renderer
     */
     'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
@@ -84,6 +88,10 @@ export namespace Components {
     */
     'root'?: string;
     /**
+    * Routes to register
+    */
+    'routes'?: Record<string, string>;
+    /**
     * State renderer
     */
     'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
@@ -117,7 +125,11 @@ export namespace Components {
     /**
     * Callback for route subscriptions
     */
-    'route': RouteHandler<any, any, RouteEvent>;
+    'route': RouteHandler;
+    /**
+    * Routes to register
+    */
+    'routes': Record<string, string>;
     /**
     * State renderer
     */
@@ -147,7 +159,11 @@ export namespace Components {
     /**
     * Callback for route subscriptions
     */
-    'route'?: RouteHandler<any, any, RouteEvent>;
+    'route'?: RouteHandler;
+    /**
+    * Routes to register
+    */
+    'routes'?: Record<string, string>;
     /**
     * State renderer
     */

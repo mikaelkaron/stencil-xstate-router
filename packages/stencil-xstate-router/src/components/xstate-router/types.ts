@@ -20,16 +20,14 @@ export type Send<
   TEvent extends EventObject
 > = Interpreter<TContext, TSchema, TEvent>['send'];
 
-export type NavigationHandler = (url: string) => void;
+export type NavigationHandler = (path: string, params?: Record<string, any>) => void;
 
-export type RouteHandler<
-  TContext,
-  TSchema extends StateSchema,
-  TEvent extends RouteEvent
-> = (
-  routes: [{ path: string; [key: string]: any }],
-  send: Send<TContext, TSchema, TEvent>
-) => VoidFunction[];
+export type RouteHandler = (routes: Route[]) => VoidFunction;
+
+export type Route = {
+  path: string;
+  handler: (params?: Record<string, any>) => any;
+};
 
 export type StateRenderer<
   TContext,
@@ -79,9 +77,14 @@ export type RouteEvent = EventObject & {
 
 export type NavigationEvent = EventObject & {
   /**
-   * URL routed to
+   * Path routed to
    */
-  url?: string;
+  path?: string;
+
+  /**
+   * Route params
+   */
+  params?: Record<string, any>
 };
 
 export type RouterProps<
@@ -93,7 +96,7 @@ export type RouterProps<
   options?: RouterInterpreterOptions;
   stateRenderer?: StateRenderer<any, any, RouteEvent>;
   componentRenderer?: ComponentRenderer<any, any, EventObject>;
-  route?: RouteHandler<any, any, RouteEvent>;
+  route?: RouteHandler;
   navigate?: NavigationHandler;
 };
 

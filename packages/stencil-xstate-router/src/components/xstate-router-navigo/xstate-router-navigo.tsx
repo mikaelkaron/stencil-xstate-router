@@ -20,13 +20,18 @@ import RouteRecognizer from 'route-recognizer';
   shadow: false
 })
 export class XstateRouterNavigo implements ComponentInterface {
-  @State() private routes = new RouteRecognizer();
+  @State() private recognizer = new RouteRecognizer();
   @State() private router: Navigo;
 
   /**
    * An XState machine
    */
   @Prop() machine!: StateMachine<any, any, EventObject>;
+
+  /**
+   * Routes to register
+   */
+  @Prop() routes?: Record<string, string>;
 
   /**
    * Interpreter options
@@ -88,7 +93,7 @@ export class XstateRouterNavigo implements ComponentInterface {
       // that nobody else handled this already
       !event.defaultPrevented &&
       // that we clicked an anchor,
-      el.tagName.toUpperCase() === 'A' &&
+      el.tagName.toLowerCase() === 'a' &&
       // that the link has a `href` attribute
       el.hasAttribute('href')
     ) {
@@ -97,7 +102,7 @@ export class XstateRouterNavigo implements ComponentInterface {
         .getAttribute('href')
         .replace(new RegExp(`^${this.hash}`), '');
       // check if we recognize this url
-      if (this.routes.recognize(href)) {
+      if (this.recognizer.recognize(href)) {
         // stop default click action
         event.preventDefault();
         // navigate to the url
@@ -107,38 +112,43 @@ export class XstateRouterNavigo implements ComponentInterface {
   }
 
   render() {
-    const { options, stateRenderer, componentRenderer } = this;
+    const { options, routes, stateRenderer, componentRenderer } = this;
     return (
       <xstate-router
         machine={this.machine}
-        route={(routes, send) =>
-          routes
-            ? routes
-                // map paths to unsubscribe callbacks
-                .map(({ path }) => {
-                  const handler = (params: Record<string, any>) =>
-                    send({
-                      type: 'ROUTE',
-                      path,
-                      params
-                    });
-                  // add path to this.routes
-                  this.routes.add([{ path, handler }]);
-                  // subscribe path to history changes
-                  this.router.on(path, handler);
-                  // return unsubscribe handler
-                  return () => this.router.off(path, handler);
-                })
-            : []
-        }
-        navigate={url =>
+        route={routes => {
+          // add routes to recognizer
+          routes.forEach(route => this.recognizer.add([route]));
+          // add routes to router
+          this.router.on(
+            routes.reduce(
+              (acc, { path, handler }) => ({
+                ...acc,
+                [path]: handler
+              }),
+              {}
+            )
+          );
+          // return unsubscribe
+          return () =>
+            routes.forEach(({ path, handler }) =>
+              this.router.off(path, handler)
+            );
+        }}
+        navigate={(path, params) => {
+          // replace params in path
+          const url = path.replace(/:(\w+)/g, (_, key) => params[key]);
           // compare hash/pathname with url and navigate if no match
-          (this.useHash
-            ? location.hash !== `${this.hash}${url}`
-            : location.pathname !== url) && this.router.navigate(url)
-        }
+          if (
+            this.useHash
+              ? location.hash !== `${this.hash}${url}`
+              : location.pathname !== url
+          ) {
+            this.router.navigate(url);
+          }
+        }}
         // pass down config to router
-        {...{ options, stateRenderer, componentRenderer }}
+        {...{ options, routes, stateRenderer, componentRenderer }}
       >
         <slot />
       </xstate-router>

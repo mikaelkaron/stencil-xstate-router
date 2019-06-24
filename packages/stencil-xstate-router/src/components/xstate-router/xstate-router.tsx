@@ -1,24 +1,33 @@
 import { Component, ComponentInterface, Prop, State } from '@stencil/core';
 import { EventObject, interpret, Interpreter, StateMachine } from 'xstate';
-import { mergeMeta, renderComponent, routeGuard } from './utils';
 import {
   ComponentRenderer,
   NavigationEvent,
   NavigationHandler,
   RenderEvent,
+  Route,
   RouteEvent,
   RouteHandler,
   RouterInterpreterOptions,
   RouteTransitionDefinition,
   StateRenderer
 } from './types';
+import {
+  getPath,
+  getPathById,
+  getTarget,
+  getTransition,
+  mergeMeta,
+  renderComponent,
+  routeGuard
+} from './utils';
 
 @Component({
   tag: 'xstate-router',
   shadow: false
 })
 export class XstateRouter implements ComponentInterface {
-  @State() private subscriptions: Set<VoidFunction> = new Set();
+  @State() private unsubscribe: VoidFunction;
   @State() private service: Interpreter<any, any, EventObject>;
   @State() private rendered: {
     component: string;
@@ -30,6 +39,11 @@ export class XstateRouter implements ComponentInterface {
    * An XState machine
    */
   @Prop() machine!: StateMachine<any, any, EventObject>;
+
+  /**
+   * Routes to register
+   */
+  @Prop() routes: Record<string, string> = { ROUTE: '' };
 
   /**
    * Interpreter options
@@ -53,7 +67,7 @@ export class XstateRouter implements ComponentInterface {
   /**
    * Callback for route subscriptions
    */
-  @Prop() route: RouteHandler<any, any, RouteEvent> = () => [];
+  @Prop() route: RouteHandler = () => () => {};
 
   /**
    * Callback for url changes
@@ -61,31 +75,65 @@ export class XstateRouter implements ComponentInterface {
   @Prop() navigate: NavigationHandler = () => {};
 
   componentWillLoad() {
-    const { route, navigate } = this;
-
+    const { routes, navigate } = this;
     // configure maching with route guard
     const machine = this.machine.withConfig({
       guards: {
         route: routeGuard
       }
     });
-    // extract routes from machine
-    const routes = machine.on['ROUTE'] as RouteTransitionDefinition<
-      any,
-      RouteEvent
-    >[];
     // create service that triggers RENDER on matching transitions
     const service = interpret(machine, this.options);
     const { send, initialState } = service;
-    if (route && routes) {
-      // loop routes and add route subscribe/unsubscribe
-      routes.forEach(({ cond: { path } }) =>
-        route([{ path }], send).forEach(unsubscribe =>
-          this.subscriptions.add(unsubscribe)
-        )
-      );
-    }
-    service
+    const pathToUrl: Record<string, string> = {};
+    const pathToHandler: Route[] = [];
+
+    Object.keys(routes).forEach(name => {
+      const route = routes[name];
+      const transitions = machine.on[name] as RouteTransitionDefinition<
+        any,
+        RouteEvent
+      >[];
+      // if path was provided we're using a simple transition
+      if (route) {
+        // add route to outgouing route table
+        const path = (pathToUrl[
+          getPathById(machine, getTarget(getTransition(transitions)))
+        ] = route);
+        // add route to ingoing route table
+        pathToHandler.push({
+          path,
+          handler: params =>
+            send({
+              type: name,
+              path,
+              params
+            })
+        });
+      }
+      // otherwise loop transitions
+      else
+        transitions.forEach(transition => {
+          // add route to outgouing route table
+          const path = (pathToUrl[
+            getPathById(machine, getTarget(transition))
+          ] = getPath(transition));
+          // add route to ingoing route table
+          pathToHandler.push({
+            path,
+            handler: params =>
+              send({
+                type: name,
+                path,
+                params
+              })
+          });
+        });
+    });
+    // call callback and store unsubscribe
+    this.unsubscribe = this.route(pathToHandler);
+    // store service
+    this.service = service
       // add transition handler that triggers RENDER on state transition
       .onTransition(state => {
         // return fast if state has not changed and is not the initial state
@@ -98,9 +146,19 @@ export class XstateRouter implements ComponentInterface {
         const { component, params, slot } = merge
           ? mergeMeta(state.meta)
           : state.meta;
-        // if there's a component, issue render
+        // get url by reducing state path and matching route
+        const path = state
+          .toStrings()
+          .reduceRight((url, path) => url || pathToUrl[path], undefined);
+        // if there's a url we NAVIGATE
+        if (path) {
+          send('NAVIGATE', {
+            path,
+            params: { ...params, ...state.context.params }
+          });
+        }
+        // if there's a component we RENDER
         if (component) {
-          // send RENDER event with payload
           send('RENDER', {
             component,
             slot,
@@ -110,16 +168,15 @@ export class XstateRouter implements ComponentInterface {
       })
       // add event NAVIGATE and RENDER handlers to service
       .onEvent((event: NavigationEvent | RenderEvent) => {
+        const { path, params, component, slot } = event;
         switch (event.type) {
           case 'NAVIGATE':
-            const { url } = event;
-            if (navigate) {
-              navigate(url);
+            if (path) {
+              navigate(path, params);
             }
             break;
 
           case 'RENDER':
-            const { component, slot, params } = event;
             if (component) {
               this.rendered = {
                 component,
@@ -130,8 +187,6 @@ export class XstateRouter implements ComponentInterface {
             break;
         }
       });
-    // store service
-    this.service = service;
   }
 
   componentDidLoad() {
@@ -141,7 +196,7 @@ export class XstateRouter implements ComponentInterface {
 
   componentDidUnload() {
     // unsubscribe from route changes
-    this.subscriptions.forEach(unsubscribe => unsubscribe());
+    this.unsubscribe();
     // stop and clean service
     this.service.stop();
   }
