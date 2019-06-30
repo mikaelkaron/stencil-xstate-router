@@ -5,9 +5,7 @@
  */
 
 
-import '@stencil/core';
-
-
+import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import {
   EventObject,
   StateMachine,
@@ -21,9 +19,41 @@ import {
   StateRenderer,
 } from './components/xstate-router/types';
 
-
 export namespace Components {
-
+  interface XstateRouter {
+    /**
+    * Component renderer
+    */
+    'componentRenderer': ComponentRenderer<
+    any,
+    any,
+    EventObject
+    >;
+    /**
+    * An XState machine
+    */
+    'machine': StateMachine<any, any, EventObject>;
+    /**
+    * Callback for url changes
+    */
+    'navigate': NavigationHandler;
+    /**
+    * Interpreter options
+    */
+    'options'?: RouterInterpreterOptions;
+    /**
+    * Callback for route subscriptions
+    */
+    'route': RouteHandler;
+    /**
+    * Routes to register
+    */
+    'routes': Record<string, string>;
+    /**
+    * State renderer
+    */
+    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
+  }
   interface XstateRouterNavigo {
     /**
     * Capture clicks from child elements and convert to routes
@@ -62,7 +92,64 @@ export namespace Components {
     */
     'useHash'?: boolean;
   }
-  interface XstateRouterNavigoAttributes extends StencilHTMLAttributes {
+}
+
+declare global {
+
+
+  interface HTMLXstateRouterElement extends Components.XstateRouter, HTMLStencilElement {}
+  var HTMLXstateRouterElement: {
+    prototype: HTMLXstateRouterElement;
+    new (): HTMLXstateRouterElement;
+  };
+
+  interface HTMLXstateRouterNavigoElement extends Components.XstateRouterNavigo, HTMLStencilElement {}
+  var HTMLXstateRouterNavigoElement: {
+    prototype: HTMLXstateRouterNavigoElement;
+    new (): HTMLXstateRouterNavigoElement;
+  };
+  interface HTMLElementTagNameMap {
+    'xstate-router': HTMLXstateRouterElement;
+    'xstate-router-navigo': HTMLXstateRouterNavigoElement;
+  }
+}
+
+declare namespace LocalJSX {
+  interface XstateRouter extends JSXBase.HTMLAttributes<HTMLXstateRouterElement> {
+    /**
+    * Component renderer
+    */
+    'componentRenderer'?: ComponentRenderer<
+    any,
+    any,
+    EventObject
+    >;
+    /**
+    * An XState machine
+    */
+    'machine': StateMachine<any, any, EventObject>;
+    /**
+    * Callback for url changes
+    */
+    'navigate'?: NavigationHandler;
+    /**
+    * Interpreter options
+    */
+    'options'?: RouterInterpreterOptions;
+    /**
+    * Callback for route subscriptions
+    */
+    'route'?: RouteHandler;
+    /**
+    * Routes to register
+    */
+    'routes'?: Record<string, string>;
+    /**
+    * State renderer
+    */
+    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
+  }
+  interface XstateRouterNavigo extends JSXBase.HTMLAttributes<HTMLXstateRouterNavigoElement> {
     /**
     * Capture clicks from child elements and convert to routes
     */
@@ -101,117 +188,19 @@ export namespace Components {
     'useHash'?: boolean;
   }
 
-  interface XstateRouter {
-    /**
-    * Component renderer
-    */
-    'componentRenderer': ComponentRenderer<
-    any,
-    any,
-    EventObject
-    >;
-    /**
-    * An XState machine
-    */
-    'machine': StateMachine<any, any, EventObject>;
-    /**
-    * Callback for url changes
-    */
-    'navigate': NavigationHandler;
-    /**
-    * Interpreter options
-    */
-    'options'?: RouterInterpreterOptions;
-    /**
-    * Callback for route subscriptions
-    */
-    'route': RouteHandler;
-    /**
-    * Routes to register
-    */
-    'routes': Record<string, string>;
-    /**
-    * State renderer
-    */
-    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
-  }
-  interface XstateRouterAttributes extends StencilHTMLAttributes {
-    /**
-    * Component renderer
-    */
-    'componentRenderer'?: ComponentRenderer<
-    any,
-    any,
-    EventObject
-    >;
-    /**
-    * An XState machine
-    */
-    'machine': StateMachine<any, any, EventObject>;
-    /**
-    * Callback for url changes
-    */
-    'navigate'?: NavigationHandler;
-    /**
-    * Interpreter options
-    */
-    'options'?: RouterInterpreterOptions;
-    /**
-    * Callback for route subscriptions
-    */
-    'route'?: RouteHandler;
-    /**
-    * Routes to register
-    */
-    'routes'?: Record<string, string>;
-    /**
-    * State renderer
-    */
-    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
+  interface IntrinsicElements {
+    'xstate-router': XstateRouter;
+    'xstate-router-navigo': XstateRouterNavigo;
   }
 }
 
-declare global {
-  interface StencilElementInterfaces {
-    'XstateRouterNavigo': Components.XstateRouterNavigo;
-    'XstateRouter': Components.XstateRouter;
-  }
-
-  interface StencilIntrinsicElements {
-    'xstate-router-navigo': Components.XstateRouterNavigoAttributes;
-    'xstate-router': Components.XstateRouterAttributes;
-  }
+export { LocalJSX as JSX };
 
 
-  interface HTMLXstateRouterNavigoElement extends Components.XstateRouterNavigo, HTMLStencilElement {}
-  var HTMLXstateRouterNavigoElement: {
-    prototype: HTMLXstateRouterNavigoElement;
-    new (): HTMLXstateRouterNavigoElement;
-  };
-
-  interface HTMLXstateRouterElement extends Components.XstateRouter, HTMLStencilElement {}
-  var HTMLXstateRouterElement: {
-    prototype: HTMLXstateRouterElement;
-    new (): HTMLXstateRouterElement;
-  };
-
-  interface HTMLElementTagNameMap {
-    'xstate-router-navigo': HTMLXstateRouterNavigoElement
-    'xstate-router': HTMLXstateRouterElement
-  }
-
-  interface ElementTagNameMap {
-    'xstate-router-navigo': HTMLXstateRouterNavigoElement;
-    'xstate-router': HTMLXstateRouterElement;
-  }
-
-
+declare module "@stencil/core" {
   export namespace JSX {
-    export interface Element {}
-    export interface IntrinsicElements extends StencilIntrinsicElements {
-      [tagName: string]: any;
-    }
+    interface IntrinsicElements extends LocalJSX.IntrinsicElements {}
   }
-  export interface HTMLAttributes extends StencilHTMLAttributes {}
-
 }
+
+

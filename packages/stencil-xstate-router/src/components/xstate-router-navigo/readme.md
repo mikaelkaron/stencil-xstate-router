@@ -20,6 +20,19 @@
 | `useHash`              | `use-hash` | If useHash set to true then the router uses an old routing approach with hash in the URL. Fall back to this mode if there is no History API supported. | `boolean`                                                                                                                                                                                                                                                                      | `false`     |
 
 
+## Dependencies
+
+### Depends on
+
+- [xstate-router](..\xstate-router)
+
+### Graph
+```mermaid
+graph TD;
+  xstate-router-navigo --> xstate-router
+  style xstate-router-navigo fill:#f9f,stroke:#333,stroke-width:4px
+```
+
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*

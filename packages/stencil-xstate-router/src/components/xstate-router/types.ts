@@ -34,11 +34,11 @@ export type StateRenderer<
   TSchema extends StateSchema,
   TEvent extends EventObject
 > = (
-  component: JSX.Element[] | JSX.Element,
+  component: Element[] | Element,
   current: RouterState<TContext, TEvent>,
   send: Send<TContext, TSchema, TEvent>,
   service: Interpreter<TContext, TSchema, TEvent>
-) => JSX.Element[] | JSX.Element;
+) => Element[] | Element;
 
 export type ComponentRenderer<
   TContext,
@@ -47,7 +47,7 @@ export type ComponentRenderer<
 > = (
   component: string,
   props?: ComponentProps<TContext, TSchema, TEvent>
-) => JSX.Element[] | JSX.Element;
+) => Element[] | Element;
 
 export type RenderEvent = EventObject & {
   /**

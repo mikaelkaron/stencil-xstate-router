@@ -5,9 +5,7 @@
  */
 
 
-import '@stencil/core';
-
-import 'stencil-xstate-router';
+import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import {
   Send,
 } from 'stencil-xstate-router/dist/types';
@@ -15,56 +13,24 @@ import {
   State,
 } from 'xstate';
 
-
 export namespace Components {
-
   interface IsAnonymous {
     'current': State<any, any>;
     'send': Send<any, any, any>;
   }
-  interface IsAnonymousAttributes extends StencilHTMLAttributes {
-    'current': State<any, any>;
-    'send': Send<any, any, any>;
-  }
-
   interface IsAuthenticated {
     'current': State<any, any>;
     'send': Send<any, any, any>;
   }
-  interface IsAuthenticatedAttributes extends StencilHTMLAttributes {
-    'current': State<any, any>;
-    'send': Send<any, any, any>;
-  }
-
   interface IsTest {
     'current': State<any, any>;
     'send': Send<any, any, any>;
     'testId': string;
   }
-  interface IsTestAttributes extends StencilHTMLAttributes {
-    'current': State<any, any>;
-    'send': Send<any, any, any>;
-    'testId'?: string;
-  }
-
   interface XstateRouterTest {}
-  interface XstateRouterTestAttributes extends StencilHTMLAttributes {}
 }
 
 declare global {
-  interface StencilElementInterfaces {
-    'IsAnonymous': Components.IsAnonymous;
-    'IsAuthenticated': Components.IsAuthenticated;
-    'IsTest': Components.IsTest;
-    'XstateRouterTest': Components.XstateRouterTest;
-  }
-
-  interface StencilIntrinsicElements {
-    'is-anonymous': Components.IsAnonymousAttributes;
-    'is-authenticated': Components.IsAuthenticatedAttributes;
-    'is-test': Components.IsTestAttributes;
-    'xstate-router-test': Components.XstateRouterTestAttributes;
-  }
 
 
   interface HTMLIsAnonymousElement extends Components.IsAnonymous, HTMLStencilElement {}
@@ -90,28 +56,45 @@ declare global {
     prototype: HTMLXstateRouterTestElement;
     new (): HTMLXstateRouterTestElement;
   };
-
   interface HTMLElementTagNameMap {
-    'is-anonymous': HTMLIsAnonymousElement
-    'is-authenticated': HTMLIsAuthenticatedElement
-    'is-test': HTMLIsTestElement
-    'xstate-router-test': HTMLXstateRouterTestElement
-  }
-
-  interface ElementTagNameMap {
     'is-anonymous': HTMLIsAnonymousElement;
     'is-authenticated': HTMLIsAuthenticatedElement;
     'is-test': HTMLIsTestElement;
     'xstate-router-test': HTMLXstateRouterTestElement;
   }
-
-
-  export namespace JSX {
-    export interface Element {}
-    export interface IntrinsicElements extends StencilIntrinsicElements {
-      [tagName: string]: any;
-    }
-  }
-  export interface HTMLAttributes extends StencilHTMLAttributes {}
-
 }
+
+declare namespace LocalJSX {
+  interface IsAnonymous extends JSXBase.HTMLAttributes<HTMLIsAnonymousElement> {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+  }
+  interface IsAuthenticated extends JSXBase.HTMLAttributes<HTMLIsAuthenticatedElement> {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+  }
+  interface IsTest extends JSXBase.HTMLAttributes<HTMLIsTestElement> {
+    'current': State<any, any>;
+    'send': Send<any, any, any>;
+    'testId'?: string;
+  }
+  interface XstateRouterTest extends JSXBase.HTMLAttributes<HTMLXstateRouterTestElement> {}
+
+  interface IntrinsicElements {
+    'is-anonymous': IsAnonymous;
+    'is-authenticated': IsAuthenticated;
+    'is-test': IsTest;
+    'xstate-router-test': XstateRouterTest;
+  }
+}
+
+export { LocalJSX as JSX };
+
+
+declare module "@stencil/core" {
+  export namespace JSX {
+    interface IntrinsicElements extends LocalJSX.IntrinsicElements {}
+  }
+}
+
+

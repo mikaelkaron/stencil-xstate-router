@@ -1,4 +1,4 @@
-import { Component, Prop, ComponentInterface } from '@stencil/core';
+import { h, Component, Prop, ComponentInterface } from '@stencil/core';
 import { State} from 'xstate';
 import { Send } from 'stencil-xstate-router/dist/types';
 

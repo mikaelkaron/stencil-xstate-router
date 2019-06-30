@@ -1,3 +1,4 @@
+import { h } from '@stencil/core';
 import { EventObject, StateMachine, StateSchema } from 'xstate';
 import {
   ComponentRenderer,
@@ -32,7 +33,7 @@ export const RouterNavigo: <
   TEvent extends EventObject
 >(
   props: RouterNavigoProps<TContext, TSchema, TEvent>,
-  children?: JSX.Element[]
-) => JSX.Element = (props, children) => (
+  children?: Element[]
+) => Element = (props, children) => (
   <xstate-router-navigo {...props}>{children}</xstate-router-navigo>
 );

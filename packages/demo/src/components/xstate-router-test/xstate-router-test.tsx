@@ -1,4 +1,4 @@
-import { Component, State } from '@stencil/core';
+import { h, Component, State } from '@stencil/core';
 import { Machine, assign } from 'xstate';
 import 'stencil-xstate-router';
 

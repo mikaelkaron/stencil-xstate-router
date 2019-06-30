@@ -1,3 +1,4 @@
+import { h } from '@stencil/core';
 import { EventObject, StateSchema } from 'xstate';
 import { RouterProps } from './types';
 
@@ -15,8 +16,8 @@ export const Router: <
   TEvent extends EventObject
 >(
   props: RouterProps<TContext, TSchema, TEvent>,
-  children?: JSX.Element[]
-) => JSX.Element = (props, children) => (
+  children?: Element[]
+) => Element = (props, children) => (
   <xstate-router {...props}>{children}</xstate-router>
 );
 

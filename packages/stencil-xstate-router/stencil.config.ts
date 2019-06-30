@@ -7,7 +7,7 @@ export const config: Config = {
       type: 'dist',
     },
     {
-      'type': 'docs'
+      'type': 'docs-readme'
     },
     {
       type: 'www',

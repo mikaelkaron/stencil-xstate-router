@@ -1,4 +1,5 @@
 import {
+  h,
   Component,
   ComponentInterface,
   Listen,

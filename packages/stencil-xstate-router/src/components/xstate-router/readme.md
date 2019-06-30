@@ -18,6 +18,19 @@
 | `stateRenderer`        | --        | State renderer                   | `(component: Element \| Element[], current: State<any, RouteEvent>, send: (event: SingleOrArray<OmniEvent<RouteEvent>>, payload?: Record<string, any> & { type?: undefined; }) => State<any, RouteEvent>, service: Interpreter<any, any, RouteEvent>) => Element \| Element[]` | `undefined`       |
 
 
+## Dependencies
+
+### Used by
+
+ - [xstate-router-navigo](..\xstate-router-navigo)
+
+### Graph
+```mermaid
+graph TD;
+  xstate-router-navigo --> xstate-router
+  style xstate-router fill:#f9f,stroke:#333,stroke-width:4px
+```
+
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*
