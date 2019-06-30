@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v2.0.2...v3.0.0) (2019-06-30)
+
+
+### Features
+
+* upgrade deps ([a7b6248](https://github.com/mikaelkaron/stencil-xstate-router/commit/a7b6248))
+
+
+### BREAKING CHANGES
+
+* stencil@one upgrade is a breaking change
+
+
+
+
+
 ## [2.0.2](https://github.com/mikaelkaron/stencil-xstate-router/compare/v2.0.1...v2.0.2) (2019-06-24)
 
 
