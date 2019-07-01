@@ -1,6 +1,5 @@
 import { h, Component, Prop, ComponentInterface } from '@stencil/core';
-import { State} from 'xstate';
-import { Send } from 'stencil-xstate-router/dist/types';
+import { Send, RouterState } from 'stencil-xstate-router/dist/types';
 
 @Component({
   tag: 'is-authenticated',
@@ -9,19 +8,19 @@ import { Send } from 'stencil-xstate-router/dist/types';
 export class IsAuthenticated implements ComponentInterface {
   @Prop() send!: Send<any, any, any>;
 
-  @Prop() current!: State<any, any>;
+  @Prop() state!: RouterState<any, any>;
 
   componentWillLoad() {
-    console.log(`will load: ${JSON.stringify(this.current.value)}`);
+    console.log(`will load: ${JSON.stringify(this.state.value)}`);
   }
 
   componentDidUnload() {
-    console.log(`did unload: ${JSON.stringify(this.current.value)}`)
+    console.log(`did unload: ${JSON.stringify(this.state.value)}`)
   }
 
   render() {
     return [
-      JSON.stringify(this.current.value),
+      JSON.stringify(this.state.value),
       <button onClick={() => this.send('HOME')}>home</button>,
       <button onClick={() => this.send('ACCOUNT')}>account</button>,
       <button onClick={() => this.send('TEST')}>test</button>,

@@ -35,7 +35,7 @@ export type StateRenderer<
   TEvent extends EventObject
 > = (
   component: Element[] | Element,
-  current: RouterState<TContext, TEvent>,
+  state: RouterState<TContext, TEvent>,
   send: Send<TContext, TSchema, TEvent>,
   service: Interpreter<TContext, TSchema, TEvent>
 ) => Element[] | Element;
@@ -87,11 +87,11 @@ export type NavigationEvent = EventObject & {
   params?: Record<string, any>
 };
 
-export type RouterProps<
+export interface RouterProps<
   TContext,
   TSchema extends StateSchema,
   TEvent extends EventObject
-> = {
+> {
   machine: StateMachine<TContext, TSchema, TEvent>;
   options?: RouterInterpreterOptions;
   stateRenderer?: StateRenderer<any, any, RouteEvent>;
@@ -100,15 +100,15 @@ export type RouterProps<
   navigate?: NavigationHandler;
 };
 
-export type ComponentProps<
+export interface ComponentProps<
   TContext,
   TSchema extends StateSchema,
   TEvent extends EventObject
-> = {
+> {
   /**
    * Current state
    */
-  current: RouterState<TContext, TEvent>;
+  state: RouterState<TContext, TEvent>;
   /**
    * Sends events to the service
    */
@@ -117,7 +117,8 @@ export type ComponentProps<
    * Current service
    */
   service: Interpreter<TContext, TSchema, TEvent>;
-} & Record<string, any>;
+  [key: string]: any;
+};
 
 export interface RouteGuardPredicate<TContext, TEvent extends RouteEvent>
   extends GuardPredicate<TContext, TEvent> {

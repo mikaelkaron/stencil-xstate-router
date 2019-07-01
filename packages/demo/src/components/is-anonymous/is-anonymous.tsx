@@ -1,15 +1,14 @@
-import { h, Component, Prop } from '@stencil/core';
-import { State} from 'xstate';
-import { Send } from 'stencil-xstate-router/dist/types';
+import { h, Component, Prop, ComponentInterface } from '@stencil/core';
+import { Send, RouterState } from 'stencil-xstate-router/dist/types';
 
 @Component({
   tag: 'is-anonymous',
   shadow: true
 })
-export class IsAnonymous {
+export class IsAnonymous implements ComponentInterface {
   @Prop() send!: Send<any, any, any>;
 
-  @Prop() current!: State<any, any>;
+  @Prop() state!: RouterState<any, any>;
 
   render() {
     return [

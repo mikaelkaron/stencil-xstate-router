@@ -7,24 +7,22 @@
 
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import {
+  RouterState,
   Send,
 } from 'stencil-xstate-router/dist/types';
-import {
-  State,
-} from 'xstate';
 
 export namespace Components {
   interface IsAnonymous {
-    'current': State<any, any>;
     'send': Send<any, any, any>;
+    'state': RouterState<any, any>;
   }
   interface IsAuthenticated {
-    'current': State<any, any>;
     'send': Send<any, any, any>;
+    'state': RouterState<any, any>;
   }
   interface IsTest {
-    'current': State<any, any>;
     'send': Send<any, any, any>;
+    'state': RouterState<any, any>;
     'testId': string;
   }
   interface XstateRouterTest {}
@@ -66,16 +64,16 @@ declare global {
 
 declare namespace LocalJSX {
   interface IsAnonymous extends JSXBase.HTMLAttributes<HTMLIsAnonymousElement> {
-    'current': State<any, any>;
     'send': Send<any, any, any>;
+    'state': RouterState<any, any>;
   }
   interface IsAuthenticated extends JSXBase.HTMLAttributes<HTMLIsAuthenticatedElement> {
-    'current': State<any, any>;
     'send': Send<any, any, any>;
+    'state': RouterState<any, any>;
   }
   interface IsTest extends JSXBase.HTMLAttributes<HTMLIsTestElement> {
-    'current': State<any, any>;
     'send': Send<any, any, any>;
+    'state': RouterState<any, any>;
     'testId'?: string;
   }
   interface XstateRouterTest extends JSXBase.HTMLAttributes<HTMLXstateRouterTestElement> {}

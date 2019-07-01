@@ -208,10 +208,10 @@ export class XstateRouter implements ComponentInterface {
     }
 
     const { service } = this;
-    const { state: current, send } = service;
+    const { state, send } = service;
     const { component, params, slot } = this.rendered;
     const props = {
-      current,
+      state,
       send,
       service,
       slot,
@@ -222,7 +222,7 @@ export class XstateRouter implements ComponentInterface {
       ? // if there's a stateRenderer render component and pass
         this.stateRenderer(
           this.componentRenderer(component, props),
-          current,
+          state,
           send,
           service
         )

@@ -7,11 +7,11 @@ import {
   StateRenderer
 } from '../xstate-router/types';
 
-export type RouterNavigoProps<
+export interface RouterNavigoProps<
   TContext,
   TSchema extends StateSchema,
   TEvent extends EventObject
-> = {
+> {
   machine: StateMachine<TContext, TSchema, TEvent>;
   options?: RouterInterpreterOptions;
   stateRenderer?: StateRenderer<any, any, RouteEvent>;
