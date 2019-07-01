@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v3.0.1...v4.0.0) (2019-07-01)
+
+
+### Bug Fixes
+
+* align prop names ([e34dc02](https://github.com/mikaelkaron/stencil-xstate-router/commit/e34dc02))
+
+
+### BREAKING CHANGES
+
+* current -> state
+
+
+
+
+
 ## [3.0.1](https://github.com/mikaelkaron/stencil-xstate-router/compare/v3.0.0...v3.0.1) (2019-07-01)
 
 
