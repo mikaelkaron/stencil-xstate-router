@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.1](https://github.com/mikaelkaron/stencil-xstate-router/compare/v3.0.0...v3.0.1) (2019-07-01)
+
+
+### Bug Fixes
+
+* remove slot from RouterNavigo ([92a18bb](https://github.com/mikaelkaron/stencil-xstate-router/commit/92a18bb))
+
+
+
+
+
 # [3.0.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v2.0.2...v3.0.0) (2019-06-30)
 
 
