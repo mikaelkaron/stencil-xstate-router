@@ -32,8 +32,5 @@ export const RouterNavigo: <
   TSchema extends StateSchema,
   TEvent extends EventObject
 >(
-  props: RouterNavigoProps<TContext, TSchema, TEvent>,
-  children?: Element[]
-) => Element = (props, children) => (
-  <xstate-router-navigo {...props}>{children}</xstate-router-navigo>
-);
+  props: RouterNavigoProps<TContext, TSchema, TEvent>
+) => Element = props => <xstate-router-navigo {...props} />;

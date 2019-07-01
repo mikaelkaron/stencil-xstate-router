@@ -165,9 +165,7 @@ export class XstateRouterNavigo implements ComponentInterface {
         }}
         // pass down config to router
         {...{ options, routes, stateRenderer, componentRenderer }}
-      >
-        <slot />
-      </xstate-router>
+      />
     );
   }
 }

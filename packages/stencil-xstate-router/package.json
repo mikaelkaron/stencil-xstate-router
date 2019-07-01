@@ -22,7 +22,7 @@
   "devDependencies": {
     "@stencil/core": "^1.1.3",
     "@types/navigo": "^7.0.1",
-    "navigo": "7.1.2",
+    "navigo": "^7.1.2",
     "xstate": "^4.6.3"
   },
   "license": "MIT",
