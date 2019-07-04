@@ -3,7 +3,6 @@ import {
   Interpreter,
   InterpreterOptions,
   State as RouterState,
-  StateMachine,
   StateSchema
 } from 'xstate';
 
@@ -73,20 +72,6 @@ export type NavigationEvent = RouterEvent & {
    */
   path: string;
 };
-
-export interface RouterProps<
-  TContext,
-  TSchema extends StateSchema,
-  TEvent extends EventObject
-> {
-  machine: StateMachine<TContext, TSchema, TEvent>;
-  options?: RouterInterpreterOptions;
-  stateRenderer?: StateRenderer<TContext, TSchema, TEvent>;
-  componentRenderer?: ComponentRenderer<TContext, TSchema, TEvent>;
-  route?: RouteHandler;
-  routes?: Record<string, string>;
-  navigate?: NavigationHandler;
-}
 
 export interface ComponentProps<
   TContext,

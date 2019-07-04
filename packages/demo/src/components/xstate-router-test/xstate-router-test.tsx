@@ -2,7 +2,7 @@ import { h, Component, State } from '@stencil/core';
 import { Machine, assign } from 'xstate';
 import 'stencil-xstate-router';
 import { DemoContext, DemoEvent, DemoSchema } from '../types';
-
+import { XstateRouterNavigo } from 'stencil-xstate-router';
 
 @Component({
   tag: 'xstate-router-test',
@@ -94,7 +94,7 @@ export class XStateRouterTest {
 
   render() {
     return (
-      <xstate-router-navigo
+      <XstateRouterNavigo
         machine={this.machine}
         routes={{
           WOOT: '/woot',

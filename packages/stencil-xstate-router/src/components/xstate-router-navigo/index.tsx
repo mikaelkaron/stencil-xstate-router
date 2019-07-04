@@ -6,7 +6,7 @@ import {
   StateRenderer
 } from '../xstate-router/types';
 
-export interface RouterNavigoProps<
+export interface XstateRouterNavigoProps<
   TContext,
   TSchema extends StateSchema,
   TEvent extends EventObject
@@ -27,10 +27,12 @@ export interface RouterNavigoProps<
  * @param props Component props
  * @param children Component children
  */
-export const RouterNavigo: <
+export const XstateRouterNavigo: <
   TContext,
   TSchema extends StateSchema,
   TEvent extends EventObject
 >(
-  props: RouterNavigoProps<TContext, TSchema, TEvent>
+  props: XstateRouterNavigoProps<TContext, TSchema, TEvent>
 ) => Element = props => <xstate-router-navigo {...props} />;
+
+export default XstateRouterNavigo;
