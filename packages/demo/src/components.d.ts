@@ -10,19 +10,24 @@ import {
   RouterState,
   Send,
 } from 'stencil-xstate-router/dist/types';
+import {
+  DemoContext,
+  DemoEvent,
+  DemoSchema,
+} from './components/types';
 
 export namespace Components {
   interface IsAnonymous {
-    'send': Send<any, any, any>;
-    'state': RouterState<any, any>;
+    'send': Send<DemoContext, DemoSchema, DemoEvent>;
+    'state': RouterState<DemoContext, DemoEvent>;
   }
   interface IsAuthenticated {
-    'send': Send<any, any, any>;
-    'state': RouterState<any, any>;
+    'send': Send<DemoContext, DemoSchema, DemoEvent>;
+    'state': RouterState<DemoContext, DemoEvent>;
   }
   interface IsTest {
-    'send': Send<any, any, any>;
-    'state': RouterState<any, any>;
+    'send': Send<DemoContext, DemoSchema, DemoEvent>;
+    'state': RouterState<DemoContext, DemoEvent>;
     'testId': string;
   }
   interface XstateRouterTest {}
@@ -64,16 +69,16 @@ declare global {
 
 declare namespace LocalJSX {
   interface IsAnonymous extends JSXBase.HTMLAttributes<HTMLIsAnonymousElement> {
-    'send': Send<any, any, any>;
-    'state': RouterState<any, any>;
+    'send': Send<DemoContext, DemoSchema, DemoEvent>;
+    'state': RouterState<DemoContext, DemoEvent>;
   }
   interface IsAuthenticated extends JSXBase.HTMLAttributes<HTMLIsAuthenticatedElement> {
-    'send': Send<any, any, any>;
-    'state': RouterState<any, any>;
+    'send': Send<DemoContext, DemoSchema, DemoEvent>;
+    'state': RouterState<DemoContext, DemoEvent>;
   }
   interface IsTest extends JSXBase.HTMLAttributes<HTMLIsTestElement> {
-    'send': Send<any, any, any>;
-    'state': RouterState<any, any>;
+    'send': Send<DemoContext, DemoSchema, DemoEvent>;
+    'state': RouterState<DemoContext, DemoEvent>;
     'testId'?: string;
   }
   interface XstateRouterTest extends JSXBase.HTMLAttributes<HTMLXstateRouterTestElement> {}

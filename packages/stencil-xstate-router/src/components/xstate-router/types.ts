@@ -4,7 +4,7 @@ import {
   InterpreterOptions,
   State as RouterState,
   StateMachine,
-  StateSchema,
+  StateSchema
 } from 'xstate';
 
 export { RouterState };
@@ -15,7 +15,10 @@ export type Send<
   TEvent extends EventObject
 > = Interpreter<TContext, TSchema, TEvent>['send'];
 
-export type NavigationHandler = (path: string, params?: Record<string, any>) => void;
+export type NavigationHandler = (
+  path: string,
+  params?: Record<string, any>
+) => void;
 
 export type RouteHandler = (routes: Route[]) => VoidFunction;
 
@@ -44,8 +47,15 @@ export type ComponentRenderer<
   props?: ComponentProps<TContext, TSchema, TEvent>
 ) => Element[] | Element;
 
-export type RenderEvent = {
-  type: 'RENDER',
+export interface RouterEvent extends EventObject {
+  /**
+   * Parameters
+   */
+  params?: Record<string, any>;
+}
+
+export type RenderEvent = RouterEvent & {
+  type: 'RENDER';
   /**
    * Component to render
    */
@@ -54,25 +64,14 @@ export type RenderEvent = {
    * Component slot
    */
   slot?: string;
-  /**
-   * Component params
-   */
-  params?: Record<string, any>;
 };
 
-export interface RouteEvent extends EventObject {
+export type NavigationEvent = RouterEvent & {
+  type: 'NAVIGATE';
   /**
    * Path routed to
    */
   path: string;
-  /**
-   * Route parameters
-   */
-  params?: Record<string, any>;
-};
-
-export type NavigationEvent = RouteEvent & {
-  type: 'NAVIGATE'
 };
 
 export interface RouterProps<
@@ -82,11 +81,12 @@ export interface RouterProps<
 > {
   machine: StateMachine<TContext, TSchema, TEvent>;
   options?: RouterInterpreterOptions;
-  stateRenderer?: StateRenderer<any, any, RouteEvent>;
-  componentRenderer?: ComponentRenderer<any, any, EventObject>;
+  stateRenderer?: StateRenderer<TContext, TSchema, TEvent>;
+  componentRenderer?: ComponentRenderer<TContext, TSchema, TEvent>;
   route?: RouteHandler;
+  routes?: Record<string, string>;
   navigate?: NavigationHandler;
-};
+}
 
 export interface ComponentProps<
   TContext,
@@ -105,7 +105,7 @@ export interface ComponentProps<
    * Current service
    */
   service: Interpreter<TContext, TSchema, TEvent>;
-};
+}
 
 /**
  * Router interpreter options

@@ -2,7 +2,6 @@ import { h } from '@stencil/core';
 import { EventObject, StateMachine, StateSchema } from 'xstate';
 import {
   ComponentRenderer,
-  RouteEvent,
   RouterInterpreterOptions,
   StateRenderer
 } from '../xstate-router/types';
@@ -14,10 +13,11 @@ export interface RouterNavigoProps<
 > {
   machine: StateMachine<TContext, TSchema, TEvent>;
   options?: RouterInterpreterOptions;
-  stateRenderer?: StateRenderer<any, any, RouteEvent>;
-  componentRenderer?: ComponentRenderer<any, any, EventObject>;
+  stateRenderer?: StateRenderer<TContext, TSchema, TEvent>;
+  componentRenderer?: ComponentRenderer<TContext, TSchema, TEvent>;
   capture?: boolean;
   root?: string;
+  routes?: Record<string, string>;
   useHash?: boolean;
   hash?: string;
 };

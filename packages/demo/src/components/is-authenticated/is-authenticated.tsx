@@ -1,14 +1,15 @@
 import { h, Component, Prop, ComponentInterface } from '@stencil/core';
 import { Send, RouterState } from 'stencil-xstate-router/dist/types';
+import { DemoContext, DemoSchema, DemoEvent } from '../types';
 
 @Component({
   tag: 'is-authenticated',
   shadow: true
 })
 export class IsAuthenticated implements ComponentInterface {
-  @Prop() send!: Send<any, any, any>;
+  @Prop() send!: Send<DemoContext, DemoSchema, DemoEvent>;
 
-  @Prop() state!: RouterState<any, any>;
+  @Prop() state!: RouterState<DemoContext, DemoEvent>;
 
   componentWillLoad() {
     console.log(`will load: ${JSON.stringify(this.state.value)}`);

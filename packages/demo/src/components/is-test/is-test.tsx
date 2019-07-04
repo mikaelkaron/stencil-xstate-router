@@ -1,14 +1,15 @@
 import { h, Component, Prop } from '@stencil/core';
 import { Send, RouterState } from 'stencil-xstate-router/dist/types';
+import { DemoContext, DemoSchema, DemoEvent } from '../types';
 
 @Component({
   tag: 'is-test',
   shadow: true
 })
 export class IsTest {
-  @Prop() send!: Send<any, any, any>;
+  @Prop() send!: Send<DemoContext, DemoSchema, DemoEvent>;
 
-  @Prop() state!: RouterState<any, any>;
+  @Prop() state!: RouterState<DemoContext, DemoEvent>;
 
   @Prop() testId: string;
 

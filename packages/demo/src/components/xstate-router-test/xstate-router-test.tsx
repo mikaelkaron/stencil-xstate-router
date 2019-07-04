@@ -1,18 +1,15 @@
 import { h, Component, State } from '@stencil/core';
 import { Machine, assign } from 'xstate';
 import 'stencil-xstate-router';
+import { DemoContext, DemoEvent, DemoSchema } from '../types';
 
-type Context = {
-  authenticated?: boolean;
-  params?: { [key: string]: string };
-};
 
 @Component({
   tag: 'xstate-router-test',
   shadow: false
 })
 export class XStateRouterTest {
-  @State() machine = Machine<Context>(
+  @State() machine = Machine<DemoContext, DemoSchema, DemoEvent>(
     {
       id: 'app',
       initial: 'anonymous',
