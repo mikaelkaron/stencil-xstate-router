@@ -13,7 +13,6 @@ import {
 import {
   ComponentRenderer,
   NavigationHandler,
-  RouteEvent,
   RouteHandler,
   RouterInterpreterOptions,
   StateRenderer,
@@ -86,7 +85,7 @@ export namespace Components {
     /**
     * State renderer
     */
-    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
+    'stateRenderer'?: StateRenderer<any, any, EventObject>;
     /**
     * If useHash set to true then the router uses an old routing approach with hash in the URL. Fall back to this mode if there is no History API supported.
     */
@@ -181,7 +180,7 @@ declare namespace LocalJSX {
     /**
     * State renderer
     */
-    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
+    'stateRenderer'?: StateRenderer<any, any, EventObject>;
     /**
     * If useHash set to true then the router uses an old routing approach with hash in the URL. Fall back to this mode if there is no History API supported.
     */
