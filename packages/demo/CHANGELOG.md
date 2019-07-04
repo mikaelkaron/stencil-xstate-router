@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.1](https://github.com/mikaelkaron/stencil-xstate-router/compare/v5.0.0...v5.0.1) (2019-07-04)
+
+**Note:** Version bump only for package stencil-xstate-demo
+
+
+
+
+
 # [5.0.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v4.0.0...v5.0.0) (2019-07-04)
 
 

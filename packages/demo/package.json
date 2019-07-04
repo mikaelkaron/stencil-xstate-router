@@ -1,7 +1,7 @@
 {
   "name": "stencil-xstate-demo",
   "private": true,
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Stencil-XState demo app",
   "scripts": {
     "build": "stencil build",
