@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v4.0.0...v5.0.0) (2019-07-04)
+
+
+### Features
+
+* simplify and remove ROUTE event ([6a06daf](https://github.com/mikaelkaron/stencil-xstate-router/commit/6a06daf))
+
+
+### BREAKING CHANGES
+
+* We've removed the legacy way of routing, get with it.
+
+
+
+
+
 # [4.0.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v3.0.1...v4.0.0) (2019-07-01)
 
 
