@@ -1,26 +1,57 @@
 import { Component, ComponentInterface, Prop, State } from '@stencil/core';
-import { EventObject, interpret, Interpreter, StateMachine } from 'xstate';
+import {
+  EventObject,
+  interpret,
+  Interpreter,
+  StateMachine,
+  TransitionDefinition,
+  StateNode,
+  OmniEventObject
+} from 'xstate';
 import {
   ComponentRenderer,
-  NavigationEvent,
   NavigationHandler,
-  RenderEvent,
   Route,
-  RouteEvent,
   RouteHandler,
   RouterInterpreterOptions,
-  RouteTransitionDefinition,
   StateRenderer
 } from './types';
-import {
-  getPath,
-  getPathById,
-  getTarget,
-  getTransition,
-  mergeMeta,
-  renderComponent,
-  routeGuard
-} from './utils';
+import { mergeMeta, renderComponent } from './utils';
+
+const getPathById = <TContext, TSchema, TEvent extends EventObject>(
+  machine: StateMachine<TContext, TSchema, TEvent>,
+  id: string
+) => machine.getStateNodeById(id).path.join('.');
+
+const getId = <TContext, TEvent extends EventObject>(
+  target: string | StateNode<TContext, any, OmniEventObject<TEvent>>
+) =>
+  typeof target === 'string'
+    ? target
+    : (target as StateNode<TContext, any, OmniEventObject<TEvent>>).id;
+
+const getTarget = <TContext, TEvent extends EventObject>(
+  transition: TransitionDefinition<TContext, TEvent>
+) => {
+  const target = transition.target;
+  if (target.length !== 1) {
+    throw new Error(
+      `expected target.length to be 1, current: ${target.length}`
+    );
+  }
+  return target[0];
+};
+
+const getTransition = <TContext, TEvent extends EventObject>(
+  transitions: TransitionDefinition<TContext, TEvent>[]
+) => {
+  if (transitions.length !== 1) {
+    throw new Error(
+      `expected transitions.length to be 1, current: ${transitions.length}`
+    );
+  }
+  return transitions[0];
+};
 
 @Component({
   tag: 'xstate-router',
@@ -43,7 +74,7 @@ export class XstateRouter implements ComponentInterface {
   /**
    * Routes to register
    */
-  @Prop() routes: Record<string, string> = { ROUTE: '' };
+  @Prop() routes: Record<string, string> = {};
 
   /**
    * Interpreter options
@@ -53,7 +84,7 @@ export class XstateRouter implements ComponentInterface {
   /**
    * State renderer
    */
-  @Prop() stateRenderer?: StateRenderer<any, any, RouteEvent>;
+  @Prop() stateRenderer?: StateRenderer<any, any, EventObject>;
 
   /**
    * Component renderer
@@ -75,60 +106,31 @@ export class XstateRouter implements ComponentInterface {
   @Prop() navigate: NavigationHandler = () => {};
 
   componentWillLoad() {
-    const { routes, navigate } = this;
-    // configure maching with route guard
-    const machine = this.machine.withConfig({
-      guards: {
-        route: routeGuard
-      }
-    });
+    const { routes, navigate, machine } = this;
     // create service that triggers RENDER on matching transitions
     const service = interpret(machine, this.options);
     const { send, initialState } = service;
     const pathToUrl: Record<string, string> = {};
     const pathToHandler: Route[] = [];
 
-    Object.keys(routes).forEach(name => {
-      const route = routes[name];
-      const transitions = machine.on[name] as RouteTransitionDefinition<
-        any,
-        RouteEvent
-      >[];
-      // if path was provided we're using a simple transition
-      if (route) {
-        // add route to outgouing route table
-        const path = (pathToUrl[
-          getPathById(machine, getTarget(getTransition(transitions)))
-        ] = route);
-        // add route to ingoing route table
-        pathToHandler.push({
-          path,
-          handler: params =>
-            send({
-              type: name,
-              path,
-              params
-            })
-        });
-      }
-      // otherwise loop transitions
-      else
-        transitions.forEach(transition => {
-          // add route to outgouing route table
-          const path = (pathToUrl[
-            getPathById(machine, getTarget(transition))
-          ] = getPath(transition));
-          // add route to ingoing route table
-          pathToHandler.push({
+    // loop over routes to build incomming and outgoing tables
+    Object.keys(routes).forEach(type => {
+      // get transitions from machine by event
+      const transitions = machine.on[type];
+      // add route to outgouing route table
+      const path = (pathToUrl[
+        getPathById(machine, getId(getTarget(getTransition(transitions))))
+      ] = routes[type]);
+      // add route to incomming route table
+      pathToHandler.push({
+        path,
+        handler: params =>
+          send({
+            type,
             path,
-            handler: params =>
-              send({
-                type: name,
-                path,
-                params
-              })
-          });
-        });
+            params
+          })
+      });
     });
     // call callback and store unsubscribe
     this.unsubscribe = this.route(pathToHandler);
@@ -146,6 +148,14 @@ export class XstateRouter implements ComponentInterface {
         const { component, params, slot } = merge
           ? mergeMeta(state.meta)
           : state.meta;
+        // if there's a component we RENDER
+        if (component) {
+          send('RENDER', {
+            component,
+            slot,
+            params: { ...params, ...state.context.params }
+          });
+        }
         // get url by reducing state path and matching route
         const path = state
           .toStrings()
@@ -157,17 +167,9 @@ export class XstateRouter implements ComponentInterface {
             params: { ...params, ...state.context.params }
           });
         }
-        // if there's a component we RENDER
-        if (component) {
-          send('RENDER', {
-            component,
-            slot,
-            params: { ...params, ...state.context.params }
-          });
-        }
       })
       // add event NAVIGATE and RENDER handlers to service
-      .onEvent((event: NavigationEvent | RenderEvent) => {
+      .onEvent(event => {
         const { path, params, component, slot } = event;
         switch (event.type) {
           case 'NAVIGATE':

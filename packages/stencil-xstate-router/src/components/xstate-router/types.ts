@@ -1,15 +1,10 @@
 import {
-  ActionObject,
   EventObject,
-  GuardPredicate,
   Interpreter,
   InterpreterOptions,
-  OmniEventObject,
   State as RouterState,
   StateMachine,
-  StateMeta,
   StateSchema,
-  TransitionConfig
 } from 'xstate';
 
 export { RouterState };
@@ -49,7 +44,8 @@ export type ComponentRenderer<
   props?: ComponentProps<TContext, TSchema, TEvent>
 ) => Element[] | Element;
 
-export type RenderEvent = EventObject & {
+export type RenderEvent = {
+  type: 'RENDER',
   /**
    * Component to render
    */
@@ -64,27 +60,19 @@ export type RenderEvent = EventObject & {
   params?: Record<string, any>;
 };
 
-export type RouteEvent = EventObject & {
+export interface RouteEvent extends EventObject {
   /**
    * Path routed to
    */
-  path?: string;
+  path: string;
   /**
    * Route parameters
    */
-  params?: Record<string, string>;
+  params?: Record<string, any>;
 };
 
-export type NavigationEvent = EventObject & {
-  /**
-   * Path routed to
-   */
-  path?: string;
-
-  /**
-   * Route params
-   */
-  params?: Record<string, any>
+export type NavigationEvent = RouteEvent & {
+  type: 'NAVIGATE'
 };
 
 export interface RouterProps<
@@ -117,44 +105,11 @@ export interface ComponentProps<
    * Current service
    */
   service: Interpreter<TContext, TSchema, TEvent>;
-  [key: string]: any;
 };
-
-export interface RouteGuardPredicate<TContext, TEvent extends RouteEvent>
-  extends GuardPredicate<TContext, TEvent> {
-  predicate: RouteConditionPredicate<TContext, OmniEventObject<TEvent>>;
-  path: string;
-}
-
-export type RouteGuard<TContext, TEvent extends RouteEvent> =
-  | RouteGuardPredicate<TContext, TEvent>
-  | (Record<string, any> & {
-      type: string;
-      path: string;
-    });
-
-export interface RouteGuardMeta<TContext, TEvent extends RouteEvent>
-  extends StateMeta<TContext, TEvent> {
-  cond: RouteGuard<TContext, TEvent>;
-}
-
-export type RouteConditionPredicate<TContext, TEvent extends RouteEvent> = (
-  context: TContext,
-  event: TEvent,
-  meta: RouteGuardMeta<TContext, TEvent>
-) => boolean;
-
-export interface RouteTransitionDefinition<TContext, TEvent extends RouteEvent>
-  extends TransitionConfig<TContext, TEvent> {
-  target: string[] | undefined;
-  actions: Array<ActionObject<TContext, TEvent>>;
-  cond?: RouteGuard<TContext, TEvent>;
-  event: string;
-}
 
 /**
  * Router interpreter options
  */
-export interface RouterInterpreterOptions extends Partial<InterpreterOptions> {
+export interface RouterInterpreterOptions extends InterpreterOptions {
   merge?: boolean;
 }

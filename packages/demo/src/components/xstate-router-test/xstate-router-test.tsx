@@ -47,13 +47,6 @@ export class XStateRouterTest {
                   })
                 }
               },
-              on: {
-                DETAILS: {
-                  target: '.details',
-                  internal: false,
-                  cond: (_ctx, event) => event.params && event.params.testId
-                }
-              },
               meta: {
                 component: 'is-test'
               }
@@ -67,12 +60,7 @@ export class XStateRouterTest {
             '': {
               target: 'anonymous',
               cond: 'isAnon'
-            },
-            HOME: {
-              target: '.home'
-            },
-            ACCOUNT: '.account',
-            TEST: '.test'
+            }
           },
           meta: {
             component: 'is-authenticated'
@@ -89,36 +77,14 @@ export class XStateRouterTest {
           target: 'anonymous'
         },
         WOOT: 'authenticated.woot',
-        ROUTE: [
-          {
-            target: 'authenticated.home',
-            cond: {
-              type: 'route',
-              path: '/'
-            }
-          },
-          {
-            target: 'authenticated.account',
-            cond: {
-              type: 'route',
-              path: '/account'
-            }
-          },
-          {
-            target: 'authenticated.test',
-            cond: {
-              type: 'route',
-              path: '/tests'
-            }
-          },
-          {
-            target: 'authenticated.test.details',
-            cond: {
-              type: 'route',
-              path: '/tests/:testId'
-            }
-          }
-        ]
+        HOME: 'authenticated.home',
+        ACCOUNT: 'authenticated.account',
+        TEST: 'authenticated.test',
+        DETAILS: {
+          target: 'authenticated.test.details',
+          internal: false,
+          cond: (_ctx, event) => event.params && event.params.testId
+        }
       }
     },
     {
@@ -130,6 +96,17 @@ export class XStateRouterTest {
   );
 
   render() {
-    return <xstate-router-navigo machine={this.machine} routes={{ROUTE: '', WOOT: '/woot'}} />;
+    return (
+      <xstate-router-navigo
+        machine={this.machine}
+        routes={{
+          WOOT: '/woot',
+          HOME: '/',
+          ACCOUNT: '/account',
+          TEST: '/tests',
+          DETAILS: '/tests/:testId'
+        }}
+      />
+    );
   }
 }

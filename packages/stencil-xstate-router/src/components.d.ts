@@ -52,7 +52,7 @@ export namespace Components {
     /**
     * State renderer
     */
-    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
+    'stateRenderer'?: StateRenderer<any, any, EventObject>;
   }
   interface XstateRouterNavigo {
     /**
@@ -147,7 +147,7 @@ declare namespace LocalJSX {
     /**
     * State renderer
     */
-    'stateRenderer'?: StateRenderer<any, any, RouteEvent>;
+    'stateRenderer'?: StateRenderer<any, any, EventObject>;
   }
   interface XstateRouterNavigo extends JSXBase.HTMLAttributes<HTMLXstateRouterNavigoElement> {
     /**

@@ -12,8 +12,8 @@ export class IsAnonymous implements ComponentInterface {
 
   render() {
     return [
-    <button onClick={() => this.send('LOGIN')}>login</button>,
-    <button onClick={() => this.send('ROUTE', {"path":"/tests","url":"/tests","isExact":true,"params":{}})}>route</button>,
-  ];
+      <button onClick={() => this.send('LOGIN')}>login</button>,
+      <button onClick={() => this.send('TEST')}>route</button>
+    ];
   }
 }
