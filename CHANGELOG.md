@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.1](https://github.com/mikaelkaron/stencil-xstate-router/compare/v5.1.0...v5.1.1) (2019-07-08)
+
+
+### Bug Fixes
+
+* handle QS for default route ([eef3d23](https://github.com/mikaelkaron/stencil-xstate-router/commit/eef3d23))
+
+
+
+
+
 # [5.1.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v5.0.3...v5.1.0) (2019-07-08)
 
 
