@@ -146,7 +146,18 @@ export class XstateRouterNavigo implements ComponentInterface {
               (acc, { path, handler }) => ({
                 ...acc,
                 [path]: (params: Record<string, any>, query: string) =>
-                  handler({ ...params, ...(this.useQs && parse(query)) })
+                  handler(
+                    // parsing QS for params?
+                    this.useQs
+                      ? // is this the default handler
+                        path === '/'
+                        ? // query is passed as params
+                          parse((params as unknown) as string)
+                        : // combine params and query
+                          { ...params, ...parse(query) }
+                      : // since we're not parsing QS just pass params
+                        params
+                  )
               }),
               {}
             )
