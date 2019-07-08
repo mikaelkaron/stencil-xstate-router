@@ -31,6 +31,7 @@
     "xstate": "^4.6.4"
   },
   "dependencies": {
+    "query-string": "^6.8.1",
     "route-recognizer": "^0.3.4"
   }
 }

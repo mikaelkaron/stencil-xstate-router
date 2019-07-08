@@ -90,6 +90,10 @@ export namespace Components {
     * If useHash set to true then the router uses an old routing approach with hash in the URL. Fall back to this mode if there is no History API supported.
     */
     'useHash'?: boolean;
+    /**
+    * Parse query string for params
+    */
+    'useQs'?: boolean;
   }
 }
 
@@ -185,6 +189,10 @@ declare namespace LocalJSX {
     * If useHash set to true then the router uses an old routing approach with hash in the URL. Fall back to this mode if there is no History API supported.
     */
     'useHash'?: boolean;
+    /**
+    * Parse query string for params
+    */
+    'useQs'?: boolean;
   }
 
   interface IntrinsicElements {

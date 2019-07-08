@@ -1,19 +1,20 @@
 import {
-  h,
   Component,
   ComponentInterface,
+  h,
   Listen,
   Prop,
   State
 } from '@stencil/core';
 import Navigo from 'navigo';
+import { parse } from 'query-string';
+import RouteRecognizer from 'route-recognizer';
 import { EventObject, StateMachine } from 'xstate';
 import {
   ComponentRenderer,
   RouterInterpreterOptions,
   StateRenderer
 } from '../xstate-router/types';
-import RouteRecognizer from 'route-recognizer';
 
 const composedPath = (target: Element) => {
   const path = [];
@@ -68,6 +69,11 @@ export class XstateRouterNavigo implements ComponentInterface {
    * The main URL of your application.
    */
   @Prop() root?: string;
+
+  /**
+   * Parse query string for params
+   */
+  @Prop() useQs?: boolean = true;
 
   /**
    * If useHash set to true then the router uses an old routing approach with hash in the URL.
@@ -139,7 +145,8 @@ export class XstateRouterNavigo implements ComponentInterface {
             routes.reduce(
               (acc, { path, handler }) => ({
                 ...acc,
-                [path]: handler
+                [path]: (params: Record<string, any>, query: string) =>
+                  handler({ ...params, ...(this.useQs && parse(query)) })
               }),
               {}
             )
