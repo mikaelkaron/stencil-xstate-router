@@ -1,6 +1,6 @@
-import { h, Component, Prop, ComponentInterface } from '@stencil/core';
-import { Send, RouterState } from 'stencil-xstate-router/dist/types';
-import { DemoContext, DemoSchema, DemoEvent } from '../types';
+import { Component, ComponentInterface, h, Prop } from '@stencil/core';
+import { RouterState, Send } from 'stencil-xstate-router';
+import { DemoContext, DemoEvent, DemoSchema } from '../types';
 
 @Component({
   tag: 'is-anonymous',

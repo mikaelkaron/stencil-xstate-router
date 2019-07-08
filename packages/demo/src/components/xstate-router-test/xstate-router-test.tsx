@@ -1,8 +1,8 @@
-import { h, Component, State } from '@stencil/core';
-import { Machine, assign } from 'xstate';
+import { Component, h, State } from '@stencil/core';
 import 'stencil-xstate-router';
-import { DemoContext, DemoEvent, DemoSchema } from '../types';
 import { XstateRouterNavigo } from 'stencil-xstate-router';
+import { assign, Machine } from 'xstate';
+import { DemoContext, DemoEvent, DemoSchema } from '../types';
 
 @Component({
   tag: 'xstate-router-test',

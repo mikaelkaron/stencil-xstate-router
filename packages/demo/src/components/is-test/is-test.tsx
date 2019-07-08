@@ -1,5 +1,5 @@
 import { h, Component, Prop } from '@stencil/core';
-import { Send, RouterState } from 'stencil-xstate-router/dist/types';
+import { Send, RouterState } from 'stencil-xstate-router';
 import { DemoContext, DemoSchema, DemoEvent } from '../types';
 
 @Component({

@@ -1,6 +1,6 @@
-import { h, Component, Prop, ComponentInterface } from '@stencil/core';
-import { Send, RouterState } from 'stencil-xstate-router/dist/types';
-import { DemoContext, DemoSchema, DemoEvent } from '../types';
+import { Component, ComponentInterface, h, Prop } from '@stencil/core';
+import { RouterState, Send } from 'stencil-xstate-router';
+import { DemoContext, DemoEvent, DemoSchema } from '../types';
 
 @Component({
   tag: 'is-authenticated',
@@ -16,7 +16,7 @@ export class IsAuthenticated implements ComponentInterface {
   }
 
   componentDidUnload() {
-    console.log(`did unload: ${JSON.stringify(this.state.value)}`)
+    console.log(`did unload: ${JSON.stringify(this.state.value)}`);
   }
 
   render() {
@@ -28,7 +28,9 @@ export class IsAuthenticated implements ComponentInterface {
       <button onClick={() => this.send('LOGOUT')}>logout</button>,
       <a href='/tests'>/tests</a>,
       <a href='/tests/123'>/tests/123</a>,
-      <a href='/tests'><span>deep tests</span></a>
+      <a href='/tests'>
+        <span>deep tests</span>
+      </a>
     ];
   }
 }

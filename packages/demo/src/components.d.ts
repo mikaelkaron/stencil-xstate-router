@@ -9,7 +9,7 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 import {
   RouterState,
   Send,
-} from 'stencil-xstate-router/dist/types';
+} from 'stencil-xstate-router';
 import {
   DemoContext,
   DemoEvent,
