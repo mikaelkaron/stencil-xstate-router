@@ -1,9 +1,10 @@
 {
   "scripts": {
-    "lerna": "lerna"
+    "lerna": "lerna",
+    "release": "lerna publish"
   },
   "devDependencies": {
-    "lerna": "^3.15.0"
+    "lerna": "^3.18.1"
   },
   "name": "stencil-xstate-router"
 }
