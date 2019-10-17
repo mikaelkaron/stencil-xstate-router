@@ -38,7 +38,11 @@ export class XStateRouterTest {
               initial: 'overview',
               states: {
                 overview: {},
-                details: {}
+                details: {
+                  entry: assign({
+                    params: (ctx, event) => event.params || ctx.params
+                  })
+                }
               },
               meta: {
                 component: 'is-test'
@@ -98,6 +102,9 @@ export class XStateRouterTest {
           ACCOUNT: '/account',
           TEST: '/tests',
           DETAILS: '/tests/:testId'
+        }}
+        options={{
+          useEventParams: false
         }}
       />
     );
