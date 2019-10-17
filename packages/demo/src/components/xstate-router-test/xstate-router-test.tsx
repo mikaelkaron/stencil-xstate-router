@@ -38,11 +38,7 @@ export class XStateRouterTest {
               initial: 'overview',
               states: {
                 overview: {},
-                details: {
-                  entry: assign({
-                    params: (ctx, event) => event.params || ctx.params
-                  })
-                }
+                details: {}
               },
               meta: {
                 component: 'is-test'

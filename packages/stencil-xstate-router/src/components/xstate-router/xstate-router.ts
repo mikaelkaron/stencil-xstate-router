@@ -3,16 +3,17 @@ import {
   EventObject,
   interpret,
   Interpreter,
+  OmniEventObject,
   StateMachine,
-  TransitionDefinition,
   StateNode,
-  OmniEventObject
+  TransitionDefinition
 } from 'xstate';
 import {
   ComponentRenderer,
   NavigationHandler,
   Route,
   RouteHandler,
+  RouterEvent,
   RouterInterpreterOptions,
   StateRenderer
 } from './types';
@@ -138,22 +139,27 @@ export class XstateRouter implements ComponentInterface {
     this.service = service
       // add transition handler that triggers RENDER on state transition
       .onTransition(state => {
+        const {
+          changed,
+          meta,
+          context: { params: stateParams },
+          event
+        } = state;
+        const { params: eventParams } = event as RouterEvent;
         // return fast if state has not changed and is not the initial state
-        if (!state.changed && state !== initialState) {
+        if (!changed && state !== initialState) {
           return;
         }
         // default merge to true if not passed in options
         const { merge = true } = this.options || {};
         // optionally merge state.meta before descruction
-        const { component, params, slot } = merge
-          ? mergeMeta(state.meta)
-          : state.meta;
+        const { component, params, slot } = merge ? mergeMeta(meta) : meta;
         // if there's a component we RENDER
         if (component) {
           send('RENDER', {
             component,
             slot,
-            params: { ...params, ...state.context.params }
+            params: { ...params, ...stateParams, ...eventParams }
           });
         }
         // get url by reducing state path and matching route
@@ -164,7 +170,7 @@ export class XstateRouter implements ComponentInterface {
         if (path) {
           send('NAVIGATE', {
             path,
-            params: { ...params, ...state.context.params }
+            params: { ...params, ...stateParams, ...eventParams }
           });
         }
       })
