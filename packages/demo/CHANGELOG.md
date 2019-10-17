@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v5.1.1...v5.2.0) (2019-10-17)
+
+
+### Features
+
+* Pass event.params to RENDER/NAVIGATE by default ([4394083](https://github.com/mikaelkaron/stencil-xstate-router/commit/4394083))
+
+
+
+
+
 ## [5.1.1](https://github.com/mikaelkaron/stencil-xstate-router/compare/v5.1.0...v5.1.1) (2019-07-08)
 
 **Note:** Version bump only for package stencil-xstate-demo
