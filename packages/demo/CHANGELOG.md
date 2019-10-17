@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.3.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v5.2.0...v5.3.0) (2019-10-17)
+
+
+### Features
+
+* make params expansion configurable ([45f0c98](https://github.com/mikaelkaron/stencil-xstate-router/commit/45f0c98c613cbc4115d928be4d4f80272bfef762))
+
+
+
+
+
 # [5.2.0](https://github.com/mikaelkaron/stencil-xstate-router/compare/v5.1.1...v5.2.0) (2019-10-17)
 
 
