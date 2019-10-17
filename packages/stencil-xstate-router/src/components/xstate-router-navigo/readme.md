@@ -25,7 +25,7 @@
 
 ### Depends on
 
-- [xstate-router](..\xstate-router)
+- [xstate-router](../xstate-router)
 
 ### Graph
 ```mermaid

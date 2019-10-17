@@ -95,6 +95,8 @@ export interface ComponentProps<
 /**
  * Router interpreter options
  */
-export interface RouterInterpreterOptions extends InterpreterOptions {
+export interface RouterInterpreterOptions extends Partial<InterpreterOptions> {
   merge?: boolean;
+  useStateParams?: boolean;
+  useEventParams?: boolean;
 }

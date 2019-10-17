@@ -22,7 +22,7 @@
 
 ### Used by
 
- - [xstate-router-navigo](..\xstate-router-navigo)
+ - [xstate-router-navigo](../xstate-router-navigo)
 
 ### Graph
 ```mermaid

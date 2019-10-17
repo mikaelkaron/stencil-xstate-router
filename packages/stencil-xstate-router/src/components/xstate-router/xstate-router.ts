@@ -151,15 +151,29 @@ export class XstateRouter implements ComponentInterface {
           return;
         }
         // default merge to true if not passed in options
-        const { merge = true } = this.options || {};
+        const {
+          options: {
+            merge = true,
+            useEventParams = true,
+            useStateParams = true
+          } = {}
+        } = this;
         // optionally merge state.meta before descruction
-        const { component, params, slot } = merge ? mergeMeta(meta) : meta;
+        const { component, params: metaParams, slot } = merge
+          ? mergeMeta(meta)
+          : meta;
+        // create params
+        const params = {
+          ...metaParams,
+          ...(useStateParams && stateParams),
+          ...(useEventParams && eventParams)
+        };
         // if there's a component we RENDER
         if (component) {
           send('RENDER', {
             component,
             slot,
-            params: { ...params, ...stateParams, ...eventParams }
+            params
           });
         }
         // get url by reducing state path and matching route
@@ -170,7 +184,7 @@ export class XstateRouter implements ComponentInterface {
         if (path) {
           send('NAVIGATE', {
             path,
-            params: { ...params, ...stateParams, ...eventParams }
+            params
           });
         }
       })

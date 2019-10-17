@@ -20,18 +20,18 @@
     "test.watch": "stencil test --spec --e2e --watchAll"
   },
   "devDependencies": {
-    "@stencil/core": "^1.1.5",
+    "@stencil/core": "^1.7.2",
     "@types/navigo": "^7.0.1",
     "navigo": "^7.1.2",
-    "xstate": "^4.6.4"
+    "xstate": "^4.6.7"
   },
   "license": "MIT",
   "peerDependencies": {
     "navigo": "^7.1.2",
-    "xstate": "^4.6.4"
+    "xstate": "^4.6.7"
   },
   "dependencies": {
-    "query-string": "^6.8.1",
+    "query-string": "^6.8.3",
     "route-recognizer": "^0.3.4"
   }
 }

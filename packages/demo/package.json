@@ -12,10 +12,10 @@
   "dependencies": {
     "navigo": "^7.1.2",
     "stencil-xstate-router": "file:../stencil-xstate-router",
-    "xstate": "^4.6.4"
+    "xstate": "^4.6.7"
   },
   "devDependencies": {
-    "@stencil/core": "1.1.5"
+    "@stencil/core": "1.7.2"
   },
   "license": "MIT"
 }
